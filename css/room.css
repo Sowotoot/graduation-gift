@@ -1,0 +1,304 @@
+/* ===== ROOM CONTAINER ===== */
+.room {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  background: #080a10;
+}
+
+/* ===== BACKGROUND IMAGE ===== */
+.room-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  user-select: none;
+  -webkit-user-drag: none;
+  z-index: 1;
+}
+
+/* ===== DARKNESS OVERLAY ===== */
+.darkness {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  background: rgba(0,0,0,0.97);
+  pointer-events: none;
+  transition: opacity 2.5s ease;
+}
+.darkness.lit { opacity: 0; }
+
+/* ===== HOTSPOT BUTTONS =====
+   Invisible tappable areas over each room object.
+   position: absolute coordinates are set inline on each
+   element so they're easy to tune per-image.
+   ================================================= */
+.hotspot {
+  position: absolute;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  border-radius: 12px;
+  z-index: 15;
+  /* Disable default tap flash on iOS */
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Minimum touch target size */
+  min-width: 44px;
+  min-height: 44px;
+}
+
+/* Hidden label — shown only when DEBUG_HOTSPOTS = true in JS */
+.hotspot-label {
+  display: none;
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  color: #fff;
+  background: rgba(245, 156, 42, 0.75);
+  padding: 2px 6px;
+  border-radius: 4px;
+  pointer-events: none;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+/* When debug mode is on (add class to body) show outlines + labels */
+body.debug-hotspots .hotspot {
+  border: 2px dashed rgba(245,156,42,0.85);
+  background: rgba(245,156,42,0.08);
+}
+body.debug-hotspots .hotspot-label {
+  display: block;
+}
+
+/* Gift hotspots start hidden; revealed when lamp is on */
+.gift-hotspot {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.6s ease;
+}
+.gift-hotspot.revealed {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Tap feedback */
+.gift-hotspot:active {
+  background: rgba(245,156,42,0.12);
+}
+
+/* Ripple pulse centered in hotspot */
+.gift-ripple {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 0; height: 0;
+  border-radius: 50%;
+  border: 2px solid rgba(245,156,42,0.55);
+  pointer-events: none;
+  animation: rippleGrow 3s ease-out infinite;
+  animation-play-state: paused;
+}
+.gift-hotspot.revealed .gift-ripple {
+  animation-play-state: running;
+}
+@keyframes rippleGrow {
+  0%   { width: 0;     height: 0;     opacity: 0.8; }
+  100% { width: 100px; height: 100px; opacity: 0; }
+}
+
+/* ===== PROGRESS BAR ===== */
+.progress-bar-wrap {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  z-index: 20;
+  padding: 8px 20px 16px;
+  background: linear-gradient(0deg, rgba(0,0,0,0.90) 0%, transparent 100%);
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.progress-bar-wrap.show { opacity: 1; transform: translateY(0); }
+
+.prog-track { position: relative; height: 28px; }
+.prog-fill {
+  position: absolute;
+  top: 50%; left: 5%;
+  width: 0%; height: 2px;
+  background: linear-gradient(90deg, var(--progress-pink), var(--amber));
+  transform: translateY(-50%);
+  transition: width 0.8s ease;
+  z-index: 1;
+  box-shadow: 0 0 6px rgba(245,156,42,0.42);
+}
+.prog-steps {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  z-index: 2;
+}
+.prog-step {
+  display: flex; flex-direction: column; align-items: center;
+  opacity: 0.35;
+  transition: opacity 0.4s, transform 0.4s;
+}
+.prog-step.done { opacity: 1; }
+.prog-step.done .step-dot {
+  background: var(--progress-pink);
+  border-color: var(--progress-pink);
+  box-shadow: 0 0 8px rgba(232,114,154,0.55);
+}
+.step-dot {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.08);
+  border: 1.5px solid rgba(255,255,255,0.22);
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.4s;
+}
+.step-dot span { display: none !important; }
+
+.final-step.unlocked .lock-dot {
+  background: var(--amber);
+  border-color: var(--amber);
+  box-shadow: 0 0 12px rgba(245,156,42,0.75);
+}
+
+/* ===== TOUCH HINT ===== */
+.touch-hint {
+  position: fixed;
+  bottom: 70px; left: 50%;
+  transform: translateX(-50%);
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  align-items: center; gap: 8px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s;
+}
+.touch-hint.show { opacity: 1; }
+.touch-hint p { display: none; }
+.touch-anim {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  border: 2px solid rgba(245,156,42,0.6);
+  animation: touchPulse 1.5s ease-in-out infinite;
+}
+@keyframes touchPulse {
+  0%,100% { transform: scale(1); opacity: 1; }
+  50%      { transform: scale(1.3); opacity: 0.4; }
+}
+
+/* ===== GIFT FRAME (slide-in pages) ===== */
+.gift-frame {
+  position: fixed; inset: 0; z-index: 100;
+  border: none; width: 100%; height: 100%;
+  background: var(--dark);
+  transform: translateX(100%);
+  transition: transform 0.5s cubic-bezier(0.22,1,0.36,1);
+}
+.gift-frame.active { transform: translateX(0); }
+
+
+/* ===== INTRO OVERLAY ===== */
+#introOverlay {
+  position: fixed; inset: 0; z-index: 200;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  background: var(--dark);
+  transition: opacity 1.2s ease;
+  pointer-events: auto;
+}
+#introOverlay.fade-out {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.intro-message {
+  color: rgba(255,255,255,0.85);
+  font-family: var(--font-script);
+  font-size: 28px;
+  text-align: center;
+  letter-spacing: 0.5px;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 1s ease, transform 1s ease;
+  margin-bottom: 56px;
+  padding: 0 32px;
+  line-height: 1.5;
+}
+.intro-message.visible { opacity: 1; transform: translateY(0); }
+
+.pull-hint {
+  color: rgba(245,156,42,0.6);
+  font-family: var(--font-body);
+  font-size: 11px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  opacity: 0;
+  transition: opacity 0.8s ease 1.4s;
+  margin-bottom: 14px;
+}
+.pull-hint.visible { opacity: 1; }
+
+.string-wrap {
+  position: relative;
+  display: flex; flex-direction: column; align-items: center;
+  cursor: pointer;
+  user-select: none;
+  opacity: 0;
+  transition: opacity 0.8s ease 1.4s;
+  -webkit-tap-highlight-color: transparent;
+}
+.string-wrap.visible { opacity: 1; }
+
+.string-line {
+  width: 2px;
+  height: 80px;
+  background: linear-gradient(180deg,
+    rgba(245,156,42,0.12) 0%,
+    rgba(245,156,42,0.72) 100%);
+  border-radius: 1px;
+  transform-origin: top center;
+  transition: height 0.15s ease;
+}
+.string-line.pulled { height: 114px; }
+
+.string-knob {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  background: rgba(245,156,42,0.12);
+  border: 1.5px solid rgba(245,156,42,0.6);
+  display: flex; align-items: center; justify-content: center;
+  margin-top: 4px;
+  transition: transform 0.15s ease, background 0.15s ease;
+  animation: knobFloat 2.5s ease-in-out infinite 2.2s;
+  min-width: 44px; min-height: 44px;
+}
+.string-knob.active {
+  transform: translateY(26px) scale(0.88);
+  background: rgba(245,156,42,0.32);
+  animation: none;
+}
+.knob-inner {
+  width: 9px; height: 9px;
+  border-radius: 50%;
+  background: rgba(245,156,42,0.85);
+  pointer-events: none;
+}
+
+@keyframes knobFloat {
+  0%,100% { transform: translateY(0); }
+  50%      { transform: translateY(7px); }
+}

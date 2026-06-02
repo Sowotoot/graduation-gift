@@ -1,0 +1,161 @@
+/* ===== CSS VARIABLES ===== */
+:root {
+  --dark: #080a10;
+  --dark2: #0e1018;
+  --warm-dark: #0c0e18;
+  --amber: #f59c2a;
+  --amber-glow: #ff9d00;
+  --gold: #d4943a;
+  --cream: #fdf4e3;
+  --petal-pink: #f4a7b9;
+  --petal-deep: #e07898;
+  --rose: #c85a7a;
+  --sage: #7a9e7e;
+  --env-cream: #f0e6c8;
+  --env-dark: #c8a96e;
+  --album-burgundy: #4a1a2a;
+  --album-gold: #c8963c;
+  --rec-dark: #1a1a2e;
+  --rec-screen: #0d1b2a;
+  --progress-pink: #e8729a;
+  --progress-bg: rgba(255,255,255,0.1);
+  --font-script: 'Dancing Script', cursive;
+  --font-body: 'Lato', sans-serif;
+  --font-serif: 'Playfair Display', serif;
+}
+
+/* ===== RESET ===== */
+* {
+  margin: 0; padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+html, body {
+  width: 100%; height: 100%;
+  overflow: hidden;
+  background: var(--dark);
+  font-family: var(--font-body);
+}
+
+/* ===== SAFE AREAS ===== */
+:root {
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+body {
+  padding-top: var(--safe-top);
+  padding-bottom: var(--safe-bottom);
+  overscroll-behavior-y: none;
+}
+
+/* ===== MUSIC BUTTON ===== */
+.music-btn {
+  position: fixed;
+  top: 16px; right: 16px;
+  z-index: 999;
+  width: 42px; height: 42px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255,255,255,0.18);
+  background: rgba(0,0,0,0.55);
+  color: rgba(255,255,255,0.65);
+  font-size: 18px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.3s;
+  backdrop-filter: blur(6px);
+  min-width: 44px; min-height: 44px;
+}
+.music-btn:active { transform: scale(0.9); }
+.music-btn.muted  { opacity: 0.4; }
+
+/* ===== PAGE WRAPPER ===== */
+.page-wrapper {
+  width: 100%;
+  min-height: 100vh; min-height: 100dvh;
+  overflow-y: auto; overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ===== BACK BUTTON ===== */
+.back-btn {
+  position: fixed;
+  top: 16px; left: 16px;
+  z-index: 100;
+  background: rgba(0,0,0,0.55);
+  border: 1.5px solid rgba(255,255,255,0.18);
+  color: white;
+  font-family: var(--font-body);
+  font-size: 14px;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+  display: flex; align-items: center; gap: 6px;
+  transition: all 0.2s;
+  min-width: 44px; min-height: 44px;
+}
+.back-btn:active { transform: scale(0.95); }
+
+/* ===== TOUCH HINT ===== */
+.touch-hint {
+  position: fixed;
+  bottom: 70px; left: 50%;
+  transform: translateX(-50%);
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  align-items: center; gap: 8px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s;
+}
+.touch-hint.show { opacity: 1; }
+.touch-hint p { display: none; }
+.touch-anim {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  border: 2px solid rgba(245,156,42,0.6);
+  animation: touchPulse 1.5s ease-in-out infinite;
+}
+@keyframes touchPulse {
+  0%,100% { transform: scale(1); opacity: 1; }
+  50%      { transform: scale(1.3); opacity: 0.4; }
+}
+
+/* ===== GIFT FRAME (slide-in pages) ===== */
+.gift-frame {
+  position: fixed; inset: 0; z-index: 100;
+  border: none; width: 100%; height: 100%;
+  background: var(--dark);
+  transform: translateX(100%);
+  transition: transform 0.5s cubic-bezier(0.22,1,0.36,1);
+}
+.gift-frame.active { transform: translateX(0); }
+
+/* ===== OBJECT ACTIVE STATES ===== */
+.gift-object:active .flowers-bunch { transform: scale(0.95); }
+.gift-object:active .envelope      { transform: scale(0.95); }
+.gift-object:active .album-book    { transform: scale(0.95); }
+.gift-object:active .recorder      { transform: scale(0.95); }
+
+/* ===== PAGE LAYOUTS ===== */
+.polaroid-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px; padding: 16px;
+}
+@media (min-width: 480px) {
+  .polaroid-grid {
+    grid-template-columns: repeat(3, 1fr);
+    max-width: 600px; margin: 0 auto;
+  }
+}
+.letter-page-content  { padding: 24px 20px; max-width: 480px; margin: 0 auto; }
+.voicemail-content    { padding: 20px; max-width: 400px; margin: 0 auto; }
+.ending-content       { padding: 20px; max-width: 480px; margin: 0 auto; text-align: center; }
+
+/* ===== GIFT LABELS (hidden) ===== */
+.gift-label { display: none !important; }

@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>A Letter For You 💌</title>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;600;700&family=Caveat:wght@400;600&family=Special+Elite&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+    html, body {
+      width:100%; min-height:100dvh;
+      background:#08060f;
+      font-family:'Lato',sans-serif; color:white;
+      overflow-x:hidden; overflow-y:auto;
+      -webkit-overflow-scrolling:touch;
+    }
+
+    /* ── STARFIELD ── */
+    .stars { position:fixed; inset:0; pointer-events:none; z-index:0;
+      background:radial-gradient(ellipse at 50% 20%, #1a0e2e 0%, #08060f 65%);
+    }
+    .star {
+      position:absolute; border-radius:50%; background:white;
+      animation:twinkle ease-in-out infinite;
+    }
+    @keyframes twinkle { 0%,100%{opacity:0.08;} 50%{opacity:0.7;} }
+
+    /* ── BACK ── */
+    .back-btn {
+      position:fixed; top:max(16px,env(safe-area-inset-top)); left:16px; z-index:300;
+      background:rgba(0,0,0,0.55); border:1px solid rgba(255,255,255,0.18);
+      color:white; font-size:13px; font-family:'Lato',sans-serif;
+      padding:9px 17px; border-radius:20px; cursor:pointer;
+      backdrop-filter:blur(6px); letter-spacing:0.5px;
+      display:flex; align-items:center; gap:5px;
+    }
+    .back-btn:active { transform:scale(0.95); }
+
+    /* ── PAGE ── */
+    .page {
+      position:relative; z-index:1;
+      display:flex; flex-direction:column; align-items:center;
+      padding: max(90px,calc(72px + env(safe-area-inset-top))) 0 80px;
+      min-height:100dvh;
+    }
+
+    .scene-title {
+      font-family:'Dancing Script',cursive; font-size:27px;
+      color:rgba(255,255,255,0.75); margin-bottom:40px;
+      text-align:center; letter-spacing:0.5px;
+      opacity:0; transform:translateY(-8px);
+      animation:fadeSlideDown 0.8s cubic-bezier(0.22,1,0.36,1) forwards 0.3s;
+    }
+    @keyframes fadeSlideDown { to { opacity:1; transform:translateY(0); } }
+
+    /* ══════════════════════════════
+       ENVELOPE  —  BEIGE EDITION
+    ══════════════════════════════ */
+    .env-wrap {
+      position:relative;
+      width:300px; height:210px;
+      opacity:0;
+      animation:fadeSlideDown 0.9s cubic-bezier(0.22,1,0.36,1) forwards 0.55s;
+      cursor:pointer;
+      -webkit-user-select:none; user-select:none;
+    }
+
+    /* soft glow beneath */
+    .env-shadow {
+      position:absolute; bottom:-16px; left:10%; right:10%;
+      height:28px;
+      background:radial-gradient(ellipse, rgba(210,185,140,0.5) 0%, transparent 70%);
+      transition:transform 1s ease, opacity 1s ease;
+    }
+
+    /* main envelope body — warm beige */
+    .env-body {
+      position:absolute; inset:0;
+      border-radius:4px;
+      background:linear-gradient(150deg, #e8d9b8 0%, #d9c89a 60%, #c9b480 100%);
+      box-shadow:
+        0 0 0 1px rgba(180,150,90,0.4),
+        0 4px 24px rgba(0,0,0,0.45),
+        inset 0 1px 0 rgba(255,245,220,0.6);
+      overflow:hidden;
+    }
+
+    /* diagonal panel shadows */
+    .env-body::before {
+      content:''; position:absolute; inset:0;
+      background:
+        linear-gradient(to bottom right, rgba(255,245,210,0.35) 50%, transparent 50%),
+        linear-gradient(to bottom left,  rgba(160,130,70,0.2) 50%, transparent 50%);
+      background-size:50% 100%; background-position:left,right;
+      background-repeat:no-repeat;
+    }
+
+    /* bottom V fold */
+    .env-bottom {
+      position:absolute; bottom:0; left:0; right:0;
+      width:0; height:0;
+      border-left:150px solid transparent;
+      border-right:150px solid transparent;
+      border-bottom:105px solid #b8a070;
+      filter:drop-shadow(0 -2px 4px rgba(0,0,0,0.15));
+    }
+
+    /* letter peeking out */
+    .env-peek {
+      position:absolute; bottom:0; left:18px; right:18px;
+      height:0; overflow:hidden; z-index:3;
+      transition:height 0.9s cubic-bezier(0.22,1,0.36,1);
+      background:linear-gradient(180deg,#fdf8f0,#f5edd8);
+      border-radius:2px 2px 0 0;
+      box-shadow:0 -2px 12px rgba(0,0,0,0.15);
+    }
+    .env-peek.peeking { height:70px; }
+
+    /* ── FLAP ── */
+    .env-flap-scene {
+      position:absolute; top:0; left:0; right:0;
+      height:105px;
+      perspective:900px;
+      z-index:10;
+      pointer-events:none;
+    }
+    .env-flap {
+      position:absolute; top:0; left:0; right:0;
+      width:0; height:0;
+      border-left:150px solid transparent;
+      border-right:150px solid transparent;
+      border-top:105px solid #d4c090;
+      transform-origin:top center;
+      transform-style:preserve-3d;
+      transition:transform 1.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                 filter 1.4s ease;
+      filter:drop-shadow(0 4px 10px rgba(0,0,0,0.2));
+      will-change:transform;
+    }
+    /* flap inner face */
+    .env-flap::after {
+      content:'';
+      position:absolute;
+      top:-105px; left:-150px;
+      width:300px; height:105px;
+      background:linear-gradient(to bottom, #c8b07a, #b89a60);
+      clip-path:polygon(50% 100%, 0 0, 100% 0);
+      backface-visibility:visible;
+      opacity:0;
+      transition:opacity 0.4s 0.7s;
+    }
+    .env-flap.open {
+      transform:rotateX(-178deg);
+      filter:drop-shadow(0 -8px 20px rgba(0,0,0,0.25));
+    }
+    .env-flap.open::after { opacity:1; }
+
+    /* ── SEAL — graduation cap ── */
+    .env-seal {
+      position:absolute; top:36%; left:50%;
+      transform:translate(-50%,-50%);
+      width:54px; height:54px; border-radius:50%;
+      background:radial-gradient(circle at 38% 32%, #a08050, #6a5020);
+      display:flex; align-items:center; justify-content:center;
+      font-size:22px;
+      box-shadow:
+        0 3px 16px rgba(0,0,0,0.3),
+        0 0 0 2px rgba(255,230,160,0.5),
+        0 0 0 5px rgba(255,210,100,0.12);
+      z-index:20;
+      animation:sealPulse 2.8s ease-in-out infinite;
+      transition:transform 0.5s cubic-bezier(0.34,1.56,0.64,1), opacity 0.4s ease;
+    }
+    @keyframes sealPulse {
+      0%,100%{ box-shadow:0 3px 16px rgba(0,0,0,0.3), 0 0 0 2px rgba(255,230,160,0.5), 0 0 0 0 rgba(255,210,100,0.4); }
+      55%    { box-shadow:0 3px 16px rgba(0,0,0,0.3), 0 0 0 2px rgba(255,230,160,0.5), 0 0 0 14px rgba(255,210,100,0); }
+    }
+    .env-seal.breaking {
+      transform:translate(-50%,-50%) scale(1.35) rotate(15deg);
+      opacity:0;
+      transition:transform 0.45s cubic-bezier(0.34,1.56,0.64,1),
+                 opacity 0.38s 0.1s ease;
+    }
+
+    /* tap hint */
+    .tap-hint {
+      margin-top:20px;
+      font-size:11px; color:rgba(255,255,255,0.38);
+      letter-spacing:2px; text-transform:uppercase;
+      animation:hintPulse 2s ease-in-out infinite;
+      transition:opacity 0.5s ease, transform 0.5s ease;
+    }
+    @keyframes hintPulse { 0%,100%{opacity:0.3;} 50%{opacity:0.85;} }
+
+    /* ══════════════════════════════
+       LETTER
+    ══════════════════════════════ */
+    .letter-outer {
+      width:100%; max-width:430px; padding:0 16px;
+      display:none; opacity:0; transform:translateY(50px) scale(0.96);
+      transition:opacity 1.1s cubic-bezier(0.22,1,0.36,1),
+                 transform 1.1s cubic-bezier(0.22,1,0.36,1);
+      margin-top:6px;
+    }
+    .letter-outer.visible  { display:block; }
+    .letter-outer.revealed { opacity:1; transform:translateY(0) scale(1); }
+
+    .letter-paper {
+      background:linear-gradient(170deg,#fdf8f0 0%,#f8f0e2 100%);
+      border-radius:2px;
+      padding:38px 30px 50px;
+      box-shadow:
+        0 2px 6px rgba(0,0,0,0.18),
+        0 10px 40px rgba(0,0,0,0.45),
+        0 30px 80px rgba(0,0,0,0.3);
+      position:relative; overflow:hidden;
+    }
+
+    /* ruled lines */
+    .letter-paper::before {
+      content:''; position:absolute;
+      left:0; right:0; top:90px; bottom:0;
+      background:repeating-linear-gradient(
+        180deg,
+        transparent 0px, transparent 31px,
+        rgba(70,90,180,0.09) 31px, rgba(70,90,180,0.09) 32px
+      );
+      pointer-events:none;
+    }
+    /* red margin */
+    .letter-paper::after {
+      content:''; position:absolute;
+      left:54px; top:0; bottom:0; width:1px;
+      background:rgba(200,70,70,0.16);
+      pointer-events:none;
+    }
+
+    .crease {
+      position:absolute; left:0; right:0; height:1px;
+      background:linear-gradient(90deg,
+        transparent 5%, rgba(140,100,40,0.14) 20%,
+        rgba(140,100,40,0.14) 80%, transparent 95%);
+    }
+    .small-seal {
+      position:absolute; top:16px; left:18px;
+      width:28px; height:28px; border-radius:50%;
+      background:radial-gradient(circle at 38% 32%, #a08050, #6a5020);
+      display:flex; align-items:center; justify-content:center;
+      font-size:11px; opacity:0.4;
+    }
+
+    .letter-date {
+      font-family:'Special Elite',serif; font-size:12px;
+      color:rgba(42,26,14,0.4); text-align:right;
+      margin-bottom:20px; position:relative; z-index:1;
+    }
+
+    .letter-greeting {
+      font-family:'Dancing Script',cursive;
+      font-size:30px; font-weight:700; color:#2a1a0e;
+      margin-bottom:24px; line-height:1.3;
+      display:block; position:relative; z-index:1;
+      min-height:1.3em;
+    }
+    .letter-body {
+      font-family:'Caveat',cursive;
+      font-size:17.5px; line-height:2;
+      color:#3a2818; position:relative; z-index:1;
+    }
+    .letter-body p { margin-bottom:2px; min-height:2em; }
+
+    .letter-closing {
+      font-family:'Dancing Script',cursive;
+      font-size:23px; color:#7a3a18;
+      display:block; margin-top:26px;
+      position:relative; z-index:1; min-height:1.4em;
+    }
+    .letter-signature {
+      font-family:'Dancing Script',cursive;
+      font-size:33px; color:#5a2a3a;
+      display:block; margin-top:4px;
+      position:relative; z-index:1; min-height:1.4em;
+    }
+
+    /* blinking ink cursor */
+    .cursor {
+      display:inline-block; width:2px; height:0.85em;
+      background:#3a2818; vertical-align:middle;
+      margin-left:1px;
+      animation:cursorBlink 0.55s steps(1) infinite;
+    }
+    @keyframes cursorBlink { 0%,49%{opacity:1;} 50%,100%{opacity:0;} }
+  </style>
+</head>
+<body>
+
+<div class="stars" id="stars"></div>
+<button class="back-btn" onclick="goBack()">← Back</button>
+
+<div class="page">
+  <p class="scene-title">A letter from me to you 🎓</p>
+
+  <!-- ENVELOPE -->
+  <div class="env-wrap" id="envWrap" onclick="openEnvelope()">
+    <div class="env-shadow" id="envShadow"></div>
+    <div class="env-body">
+      <div class="env-bottom"></div>
+      <div class="env-peek" id="envPeek"></div>
+    </div>
+    <div class="env-flap-scene">
+      <div class="env-flap" id="envFlap"></div>
+    </div>
+    <div class="env-seal" id="envSeal">🎓</div>
+  </div>
+
+  <p class="tap-hint" id="tapHint">Tap to open 🎓</p>
+
+  <!-- LETTER -->
+  <div class="letter-outer" id="letterOuter">
+    <div class="letter-paper">
+      <div class="crease" style="top:33%;"></div>
+      <div class="crease" style="top:66%;"></div>
+      <div class="small-seal">🎓</div>
+
+      <div class="letter-date" id="lDate"></div>
+      <div class="letter-greeting" id="lGreeting"></div>
+      <div class="letter-body" id="lBody">
+        <p id="lP1"></p>
+        <p id="lP2"></p>
+        <p id="lP3"></p>
+        <p id="lP4"></p>
+        <p id="lP5"></p>
+      </div>
+      <span class="letter-closing"   id="lClosing"></span>
+      <span class="letter-signature" id="lSig"></span>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script>
+  function goBack() {
+    if (window.parent && window.parent !== window) window.parent.postMessage('close-gift','*');
+    else window.history.back();
+  }
+
+  /* ── STARS ── */
+  const starsEl = document.getElementById('stars');
+  for (let i = 0; i < 70; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const sz = 1 + Math.random() * 2.2;
+    s.style.cssText = `width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${Math.random()*100}%;animation-duration:${2+Math.random()*3.5}s;animation-delay:${Math.random()*5}s;`;
+    starsEl.appendChild(s);
+  }
+
+  /* ══════════════════════
+     LETTER CONTENT
+     ✏️ Edit here
+  ══════════════════════ */
+  const letterContent = {
+    date:      'June 2025',
+    greeting:  'My dearest Graduate,',
+    paragraphs: [
+      'Can you believe this day has finally arrived? I still remember when you first started this journey — nervous, excited, full of dreams. And now look at you. You did it.',
+      'Every late night, every challenge you pushed through, every moment you chose to keep going even when it was hard — it all led to this. I have been proud of you every single step of the way.',
+      'This graduation is not just an ending. It\'s the beginning of everything you\'ve been working toward. The world is ready for you, and trust me — you are more than ready for it.',
+      'Never forget your worth. Never stop dreaming. And whenever life gets hard, remember that you\'ve already proven you can overcome anything.',
+      'Thank you for letting me be part of your story. I love you more than words can ever say. 💕',
+    ],
+    closing:   'With all my heart,',
+    signature: 'Your biggest fan 🎓',
+  };
+
+  /* ══════════════════════
+     ENVELOPE OPEN
+  ══════════════════════ */
+  let opened = false;
+
+  function openEnvelope() {
+    if (opened) return;
+    opened = true;
+
+    const seal   = document.getElementById('envSeal');
+    const flap   = document.getElementById('envFlap');
+    const hint   = document.getElementById('tapHint');
+    const peek   = document.getElementById('envPeek');
+    const wrap   = document.getElementById('envWrap');
+    const shadow = document.getElementById('envShadow');
+    const outer  = document.getElementById('letterOuter');
+
+    const tl = gsap.timeline({ defaults:{ ease:'power3.out' } });
+
+    /* 1 ── seal gently spins and fades */
+    tl.to(seal, {
+      scale: 1.15, rotate: 10, duration: 0.2, ease: 'power2.out'
+    })
+    .to(seal, {
+      scale: 0, opacity: 0, rotate: 20,
+      duration: 0.4, ease: 'power2.inOut'
+    })
+    .to(hint, {
+      opacity: 0, y: -6, duration: 0.3, ease: 'power2.out'
+    }, '<');
+
+    /* 2 ── envelope lifts gently (anticipation) */
+    tl.to(wrap, {
+      y: -12, duration: 0.4, ease: 'power2.out'
+    }, '+=0.05');
+
+    /* 3 ── flap unfolds smoothly */
+    tl.add(() => flap.classList.add('open'));
+
+    /* 4 ── brief pause so flap animation is visible, then letter peeks */
+    tl.add(() => peek.classList.add('peeking'), '+=0.7');
+
+    /* 5 ── envelope drifts up gracefully */
+    tl.to(wrap, {
+      y: -380,
+      scale: 0.72,
+      opacity: 0,
+      rotate: -2,
+      duration: 1.2,
+      ease: 'power2.inOut',
+    }, '+=0.55')
+    .to(shadow, {
+      scaleX: 0.2, opacity: 0,
+      duration: 0.9, ease: 'power2.inOut'
+    }, '<+0.1');
+
+    /* 6 ── letter lands softly */
+    tl.add(() => {
+      outer.classList.add('visible');
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        outer.classList.add('revealed');
+      }));
+    }, '-=0.45');
+
+    /* 7 ── start typewriting */
+    tl.add(() => startTyping(), '+=0.65');
+  }
+
+  /* ══════════════════════
+     TYPEWRITER ENGINE
+  ══════════════════════ */
+  const SPEED_HANDWRITTEN = 38;
+  const SPEED_TYPEWRITER  = 28;
+  const PAUSE_BETWEEN     = 260;
+
+  const queue = [];
+
+  function enqueue(el, text, speed, onDone) {
+    queue.push({ el, text, speed, onDone });
+  }
+
+  function runQueue(idx) {
+    if (idx >= queue.length) return;
+    const { el, text, speed, onDone } = queue[idx];
+    typeInto(el, text, speed, () => {
+      if (onDone) onDone();
+      setTimeout(() => runQueue(idx + 1), PAUSE_BETWEEN);
+    });
+  }
+
+  function typeInto(el, text, speed, onDone) {
+    const cursor = document.createElement('span');
+    cursor.className = 'cursor';
+    el.appendChild(cursor);
+
+    let i = 0;
+    function tick() {
+      if (i >= text.length) {
+        cursor.remove();
+        if (onDone) onDone();
+        return;
+      }
+      const char = document.createTextNode(text[i]);
+      el.insertBefore(char, cursor);
+      i++;
+      const jitter = (Math.random() - 0.5) * speed * 0.4;
+      setTimeout(tick, Math.max(8, speed + jitter));
+    }
+    tick();
+  }
+
+  function startTyping() {
+    const c = letterContent;
+    enqueue(document.getElementById('lDate'),     c.date,     SPEED_TYPEWRITER);
+    enqueue(document.getElementById('lGreeting'), c.greeting, SPEED_HANDWRITTEN);
+    const pEls = ['lP1','lP2','lP3','lP4','lP5'];
+    c.paragraphs.forEach((txt, i) => {
+      if (pEls[i]) enqueue(document.getElementById(pEls[i]), txt, SPEED_TYPEWRITER);
+    });
+    enqueue(document.getElementById('lClosing'), c.closing,   SPEED_HANDWRITTEN);
+    enqueue(document.getElementById('lSig'),     c.signature, SPEED_HANDWRITTEN);
+    runQueue(0);
+  }
+</script>
+</body>
+</html>

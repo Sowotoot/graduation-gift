@@ -1,0 +1,130 @@
+/* ===== PAGE TRANSITIONS ===== */
+.page-enter { animation: pageEnter 0.6s cubic-bezier(0.22,1,0.36,1) forwards; }
+@keyframes pageEnter {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.page-exit { animation: pageExit 0.4s ease forwards; }
+@keyframes pageExit {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(-20px); }
+}
+
+/* ===== FLOAT ===== */
+.float-gentle { animation: floatGentle 4s ease-in-out infinite; }
+@keyframes floatGentle {
+  0%,100% { transform: translateY(0px); }
+  50%      { transform: translateY(-6px); }
+}
+
+/* ===== SPARKLE ===== */
+.sparkle {
+  position: absolute;
+  pointer-events: none;
+  animation: sparkleAnim 0.8s ease forwards;
+}
+@keyframes sparkleAnim {
+  0%   { opacity: 1; transform: scale(0) rotate(0deg); }
+  50%  { opacity: 1; transform: scale(1) rotate(180deg); }
+  100% { opacity: 0; transform: scale(0.5) rotate(360deg); }
+}
+
+/* ===== PARTICLES ===== */
+.particle {
+  position: fixed;
+  pointer-events: none;
+  border-radius: 50%;
+  z-index: 999;
+  animation: particleFall linear forwards;
+}
+@keyframes particleFall {
+  0%   { opacity: 1; transform: translateY(0) rotate(0deg); }
+  100% { opacity: 0; transform: translateY(100vh) rotate(720deg); }
+}
+
+/* ===== CONFETTI ===== */
+.confetti-piece {
+  position: fixed;
+  width: 10px; height: 10px;
+  pointer-events: none;
+  z-index: 999;
+  animation: confettiFall linear forwards;
+}
+@keyframes confettiFall {
+  0%  { opacity: 1; transform: translateY(0) rotate(0deg) scale(1); }
+  80% { opacity: 1; }
+  100%{ opacity: 0; transform: translateY(110vh) rotate(720deg) scale(0.5); }
+}
+
+/* ===== GLOW PULSE ===== */
+.glow-pulse { animation: glowPulse 2s ease-in-out infinite; }
+@keyframes glowPulse {
+  0%,100% { box-shadow: 0 0 10px rgba(245,156,42,0.3); }
+  50%      { box-shadow: 0 0 25px rgba(245,156,42,0.7); }
+}
+
+/* ===== SHIMMER ===== */
+.shimmer { position: relative; overflow: hidden; }
+.shimmer::after {
+  content: '';
+  position: absolute;
+  top: -50%; left: -75%;
+  width: 50%; height: 200%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+  transform: rotate(25deg);
+  animation: shimmerSlide 3s ease-in-out infinite;
+}
+@keyframes shimmerSlide {
+  0%   { left: -75%; }
+  100% { left: 150%; }
+}
+
+/* ===== HEARTBEAT ===== */
+.heartbeat { animation: heartbeat 1.4s ease-in-out infinite; }
+@keyframes heartbeat {
+  0%,100% { transform: scale(1); }
+  14%     { transform: scale(1.12); }
+  28%     { transform: scale(1); }
+  42%     { transform: scale(1.08); }
+  56%     { transform: scale(1); }
+}
+
+/* ===== PETAL SWAY ===== */
+.petal-sway { animation: petalSway 3s ease-in-out infinite; }
+@keyframes petalSway {
+  0%,100% { transform: rotate(0deg); }
+  33%     { transform: rotate(3deg); }
+  66%     { transform: rotate(-3deg); }
+}
+
+/* ===== TYPEWRITER CURSOR ===== */
+.typewriter-cursor::after {
+  content: '|';
+  animation: blink 0.7s step-end infinite;
+}
+@keyframes blink {
+  0%,100% { opacity: 1; }
+  50%      { opacity: 0; }
+}
+
+/* ===== STAGGER DELAYS ===== */
+.stagger-1 { animation-delay: 0.1s; }
+.stagger-2 { animation-delay: 0.2s; }
+.stagger-3 { animation-delay: 0.3s; }
+.stagger-4 { animation-delay: 0.4s; }
+.stagger-5 { animation-delay: 0.5s; }
+
+/* ===== SWIPE HINT ===== */
+.swipe-hint {
+  display: flex; align-items: center; justify-content: center;
+  gap: 8px; color: rgba(255,255,255,0.4);
+  font-size: 12px; padding: 8px; letter-spacing: 0.5px;
+}
+.swipe-arrow {
+  font-size: 16px;
+  animation: swipeHint 1.5s ease-in-out infinite;
+}
+@keyframes swipeHint {
+  0%,100% { transform: translateX(0); opacity: 0.4; }
+  50%     { transform: translateX(6px); opacity: 1; }
+}
