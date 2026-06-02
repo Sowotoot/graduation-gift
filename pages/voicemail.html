@@ -31,6 +31,18 @@
     }
     .back-btn:active { transform:scale(0.95); }
 
+    /* Music button */
+    #musicBtn {
+      position:fixed; top:max(16px,env(safe-area-inset-top)); right:16px; z-index:200;
+      background:rgba(0,0,0,0.6); border:1.5px solid rgba(255,255,255,0.2);
+      color:white; font-size:16px; width:42px; height:42px;
+      border-radius:50%; cursor:pointer;
+      backdrop-filter:blur(4px); display:flex; align-items:center; justify-content:center;
+      -webkit-user-select:none; user-select:none; transition:all 0.2s;
+    }
+    #musicBtn:active { transform:scale(0.92); }
+    #musicBtn.muted { color:rgba(255,255,255,0.3); border-color:rgba(255,255,255,0.1); }
+
     /* PAGE */
     .page {
       display:flex; flex-direction:column; align-items:center;
@@ -211,9 +223,10 @@
 </head>
 <body>
   <button class="back-btn" onclick="goBack()">← Back</button>
+  <button id="musicBtn">♪</button>
 
   <div class="page">
-    <h1 class="page-title">A message for your heart 🎙️</h1>
+    <h1 class="page-title">For You🎙️</h1>
     <p class="page-sub">Press play when you're ready</p>
 
     <!-- RECORDER DEVICE -->
@@ -255,23 +268,35 @@
 
     <!-- No audio placeholder notice -->
     <div class="no-audio" id="noAudioNotice" style="display:none">
-      🎙️ Add your voice message to <span>assets/voice/voicemail.mp3</span><br>
+      🎙️ Add your voice message to <span>assets/audio/this.m4a</span><br>
       to hear it play here
     </div>
 
     <div class="voice-message">
-      <p>Close your eyes, press play, and let this voice carry all the love and pride that words on a screen can never fully hold.</p>
-      <p>You deserve to hear it. 💕</p>
-      <div class="heart">♥</div>
+      <p>Listen closely. This one's for you. Some things are better felt than explained.</p>
+      
+      
     </div>
   </div>
 
+  <!-- Voicemail audio -->
   <audio id="voiceAudio" preload="auto">
-    <source src="../assets/voice/voicemail.mp3" type="audio/mpeg">
+    <source src="../assets/audio/this.m4a" type="audio/mp4">
+  </audio>
+
+  <!-- Background music (shared with rest of the site) -->
+  <audio id="bgMusic" loop preload="auto">
+    <source src="../assets/audio/bg-music.mp3" type="audio/mpeg">
   </audio>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="../audio.js"></script>
   <script>
+    // Init shared audio manager
+    document.addEventListener('DOMContentLoaded', () => {
+      if (typeof AudioManager !== 'undefined') AudioManager.init();
+    });
+
     function goBack() {
       if (window.parent && window.parent !== window) window.parent.postMessage('close-gift','*');
       else window.history.back();
@@ -289,19 +314,19 @@
     // Build waveform bars
     const BAR_COUNT = 36;
     const bars = [];
-    for (let i=0; i<BAR_COUNT; i++) {
+    for (let i = 0; i < BAR_COUNT; i++) {
       const b = document.createElement('div');
       b.className = 'wbar';
       const h = 10 + Math.sin(i * 0.7) * 14 + Math.random() * 18;
       b.style.height = h + 'px';
       waveform.appendChild(b);
-      bars.push({ el:b, h });
+      bars.push({ el: b, h });
     }
 
     function formatTime(s) {
-      const m = Math.floor(s/60);
-      const sec = Math.floor(s%60);
-      return `${m}:${sec.toString().padStart(2,'0')}`;
+      const m = Math.floor(s / 60);
+      const sec = Math.floor(s % 60);
+      return `${m}:${sec.toString().padStart(2, '0')}`;
     }
 
     audio.addEventListener('loadedmetadata', () => {
@@ -319,8 +344,8 @@
       timeCurrent.textContent = formatTime(audio.currentTime);
 
       // Update waveform played state
-      const playedBars = Math.floor((pct/100) * BAR_COUNT);
-      bars.forEach((b,i) => {
+      const playedBars = Math.floor((pct / 100) * BAR_COUNT);
+      bars.forEach((b, i) => {
         b.el.classList.toggle('played', i < playedBars);
         b.el.classList.toggle('active', i === playedBars);
       });
@@ -328,19 +353,42 @@
 
     audio.addEventListener('ended', () => {
       playBtn.textContent = '▶';
-      bars.forEach(b => { b.el.classList.remove('active','played'); });
+      bars.forEach(b => { b.el.classList.remove('active', 'played'); });
+      animateBars(false);
+      // Resume background music when voicemail finishes
+      if (typeof AudioManager !== 'undefined' && !AudioManager.isMuted && AudioManager.bgMusic) {
+        AudioManager.bgMusic.play().catch(() => {});
+      }
     });
+
+    function resumeBgMusic() {
+      if (typeof AudioManager !== 'undefined' && !AudioManager.isMuted && AudioManager.bgMusic) {
+        AudioManager.bgMusic.play().catch(() => {});
+      }
+    }
+
+    function pauseBgMusic() {
+      if (typeof AudioManager !== 'undefined' && AudioManager.bgMusic) {
+        AudioManager.bgMusic.pause();
+      }
+    }
 
     function togglePlay() {
       if (audio.paused) {
+        // Pause background music so only the voicemail is heard
+        pauseBgMusic();
         audio.play().then(() => {
           playBtn.textContent = '⏸';
           animateBars(true);
-        }).catch(() => { noAudioNotice.style.display = 'block'; });
+        }).catch(() => {
+          noAudioNotice.style.display = 'block';
+        });
       } else {
         audio.pause();
         playBtn.textContent = '▶';
         animateBars(false);
+        // Resume background music when voicemail is paused
+        resumeBgMusic();
       }
     }
 
@@ -351,7 +399,7 @@
     }
 
     function skipAudio(sec) {
-      audio.currentTime = Math.max(0, Math.min(audio.duration||0, audio.currentTime + sec));
+      audio.currentTime = Math.max(0, Math.min(audio.duration || 0, audio.currentTime + sec));
     }
 
     let barAnim;
@@ -359,16 +407,16 @@
       clearInterval(barAnim);
       if (!playing) return;
       barAnim = setInterval(() => {
-        bars.forEach((b,i) => {
-          const newH = 10 + Math.sin(i * 0.7 + Date.now()*0.003) * 14 + Math.random() * 10;
+        bars.forEach((b, i) => {
+          const newH = 10 + Math.sin(i * 0.7 + Date.now() * 0.003) * 14 + Math.random() * 10;
           b.el.style.height = newH + 'px';
         });
       }, 100);
     }
 
     // Entrance animation
-    gsap.from('#recorderDevice', { y:40, opacity:0, scale:0.9, duration:1, ease:'back.out(1.5)', delay:0.3 });
-    gsap.from('.voice-message', { y:20, opacity:0, duration:0.8, delay:0.8 });
+    gsap.from('#recorderDevice', { y: 40, opacity: 0, scale: 0.9, duration: 1, ease: 'back.out(1.5)', delay: 0.3 });
+    gsap.from('.voice-message', { y: 20, opacity: 0, duration: 0.8, delay: 0.8 });
   </script>
 </body>
 </html>

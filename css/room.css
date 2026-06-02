@@ -43,19 +43,16 @@
   cursor: pointer;
   border-radius: 12px;
   z-index: 15;
-  /* Disable default tap flash on iOS */
   -webkit-tap-highlight-color: transparent;
   outline: none;
   padding: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  /* Minimum touch target size */
   min-width: 44px;
   min-height: 44px;
 }
 
-/* Hidden label — shown only when DEBUG_HOTSPOTS = true in JS */
 .hotspot-label {
   display: none;
   font-family: var(--font-body);
@@ -70,7 +67,6 @@
   text-transform: uppercase;
 }
 
-/* When debug mode is on (add class to body) show outlines + labels */
 body.debug-hotspots .hotspot {
   border: 2px dashed rgba(245,156,42,0.85);
   background: rgba(245,156,42,0.08);
@@ -79,7 +75,6 @@ body.debug-hotspots .hotspot-label {
   display: block;
 }
 
-/* Gift hotspots start hidden; revealed when lamp is on */
 .gift-hotspot {
   opacity: 0;
   pointer-events: none;
@@ -90,12 +85,10 @@ body.debug-hotspots .hotspot-label {
   pointer-events: auto;
 }
 
-/* Tap feedback */
 .gift-hotspot:active {
   background: rgba(245,156,42,0.12);
 }
 
-/* Ripple pulse centered in hotspot */
 .gift-ripple {
   position: absolute;
   top: 50%; left: 50%;
@@ -215,90 +208,218 @@ body.debug-hotspots .hotspot-label {
 #introOverlay {
   position: fixed; inset: 0; z-index: 200;
   display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  background: var(--dark);
+  align-items: center; justify-content: flex-start;
+  background: radial-gradient(ellipse at 50% 20%, #1a1208 0%, #080a10 60%);
   transition: opacity 1.2s ease;
   pointer-events: auto;
+  overflow: hidden;
 }
 #introOverlay.fade-out {
   opacity: 0;
   pointer-events: none;
 }
 
+/* ===== SPOTLIGHT ===== */
+.spotlight {
+  position: absolute;
+  top: -60px; left: 50%;
+  transform: translateX(-50%);
+  width: 120px; height: 420px;
+  background: linear-gradient(180deg,
+    rgba(255,220,140,0.55) 0%,
+    rgba(255,200,100,0.18) 45%,
+    transparent 100%);
+  clip-path: polygon(30% 0%, 70% 0%, 100% 100%, 0% 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ===== BOKEH DOTS ===== */
+.bokeh-container {
+  position: absolute; inset: 0;
+  pointer-events: none; z-index: 1;
+}
+.bokeh-dot {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(168, 85, 247, 0.55);
+  filter: blur(2px);
+  animation: bokehFloat linear infinite;
+}
+@keyframes bokehFloat {
+  0%   { transform: translateY(0) scale(1); opacity: 0.6; }
+  50%  { opacity: 0.9; }
+  100% { transform: translateY(-30px) scale(0.85); opacity: 0; }
+}
+
+/* ===== FALLING PETALS ===== */
+.petal-container {
+  position: absolute; inset: 0;
+  pointer-events: none; z-index: 2;
+  overflow: hidden;
+}
+.petal {
+  position: absolute;
+  top: -20px;
+  width: 10px; height: 10px;
+  border-radius: 50% 0 50% 0;
+  background: #c084fc;
+  opacity: 0.85;
+  animation: petalFall linear infinite;
+}
+@keyframes petalFall {
+  0%   { transform: translateY(0) rotate(0deg) translateX(0); opacity: 0.9; }
+  80%  { opacity: 0.7; }
+  100% { transform: translateY(110vh) rotate(540deg) translateX(40px); opacity: 0; }
+}
+
+/* ===== MAIN CONTENT ===== */
+.intro-content {
+  position: relative; z-index: 5;
+  display: flex; flex-direction: column;
+  align-items: center;
+  padding-top: 14vh;
+  gap: 0;
+  width: 100%;
+}
+
 .intro-message {
-  color: rgba(255,255,255,0.85);
+  color: rgba(255, 248, 220, 0.95);
   font-family: var(--font-script);
-  font-size: 28px;
+  font-size: clamp(26px, 7vw, 34px);
   text-align: center;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.4px;
+  line-height: 1.4;
   opacity: 0;
-  transform: translateY(8px);
+  transform: translateY(10px);
   transition: opacity 1s ease, transform 1s ease;
-  margin-bottom: 56px;
-  padding: 0 32px;
-  line-height: 1.5;
+  padding: 0 28px;
+  text-shadow:
+    0 0 30px rgba(245,156,42,0.25),
+    0 0 60px rgba(245,156,42,0.10);
 }
 .intro-message.visible { opacity: 1; transform: translateY(0); }
 
-.pull-hint {
-  color: rgba(245,156,42,0.6);
-  font-family: var(--font-body);
-  font-size: 11px;
-  letter-spacing: 2.5px;
-  text-transform: uppercase;
+/* ===== CHERRY BLOSSOM ===== */
+.blossom-wrap {
+  position: relative;
+  display: flex; align-items: center; justify-content: center;
+  margin: 14px 0 18px;
   opacity: 0;
-  transition: opacity 0.8s ease 1.4s;
-  margin-bottom: 14px;
+  transition: opacity 1s ease 0.5s;
+}
+.blossom-wrap.visible { opacity: 1; }
+
+.blossom-glow {
+  position: absolute;
+  width: 80px; height: 80px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(168,85,247,0.45) 0%, transparent 70%);
+  animation: blossomPulse 2.8s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes blossomPulse {
+  0%,100% { transform: scale(1); opacity: 0.6; }
+  50%      { transform: scale(1.25); opacity: 1; }
+}
+
+.blossom-emoji {
+  font-size: 52px;
+  position: relative; z-index: 1;
+  filter: drop-shadow(0 0 14px rgba(168,85,247,0.8));
+  animation: blossomFloat 3.5s ease-in-out infinite;
+}
+@keyframes blossomFloat {
+  0%,100% { transform: translateY(0); }
+  50%      { transform: translateY(-6px); }
+}
+
+/* ===== PULL HINT ===== */
+.pull-hint {
+  color: rgba(255,255,255,0.78);
+  font-family: var(--font-body);
+  font-size: 15px;
+  text-align: center;
+  line-height: 1.65;
+  letter-spacing: 0.2px;
+  opacity: 0;
+  transition: opacity 0.9s ease 1.3s;
+  margin-bottom: 0;
 }
 .pull-hint.visible { opacity: 1; }
 
+.hint-heart {
+  color: #f4a7b9;
+  font-size: 13px;
+}
+
+/* ===== CHEVRON ===== */
+.chevron-wrap {
+  margin-top: 10px;
+  opacity: 0;
+  transition: opacity 0.9s ease 1.6s;
+  animation: chevronBounce 1.6s ease-in-out infinite 2.5s;
+}
+.chevron-wrap.visible { opacity: 1; }
+
+.chevron {
+  color: rgba(245,156,42,0.75);
+  font-size: 20px;
+  display: block;
+}
+@keyframes chevronBounce {
+  0%,100% { transform: translateY(0); }
+  50%      { transform: translateY(5px); }
+}
+
+/* ===== STRING ===== */
 .string-wrap {
   position: relative;
   display: flex; flex-direction: column; align-items: center;
   cursor: pointer;
   user-select: none;
+  z-index: 6;
+  margin-top: 12px;
   opacity: 0;
-  transition: opacity 0.8s ease 1.4s;
+  transition: opacity 0.9s ease 1.8s;
   -webkit-tap-highlight-color: transparent;
 }
 .string-wrap.visible { opacity: 1; }
 
 .string-line {
-  width: 2px;
-  height: 80px;
+  width: 1.5px;
+  height: 90px;
   background: linear-gradient(180deg,
-    rgba(245,156,42,0.12) 0%,
-    rgba(245,156,42,0.72) 100%);
+    rgba(245,156,42,0.10) 0%,
+    rgba(245,156,42,0.82) 100%);
   border-radius: 1px;
   transform-origin: top center;
-  transition: height 0.15s ease;
+  transition: height 0.18s ease;
 }
-.string-line.pulled { height: 114px; }
+.string-line.pulled { height: 126px; }
 
 .string-knob {
-  width: 30px; height: 30px;
+  width: 48px; height: 48px;
   border-radius: 50%;
-  background: rgba(245,156,42,0.12);
-  border: 1.5px solid rgba(245,156,42,0.6);
+  background: rgba(245,156,42,0.10);
+  border: 1.5px solid rgba(245,156,42,0.65);
   display: flex; align-items: center; justify-content: center;
   margin-top: 4px;
-  transition: transform 0.15s ease, background 0.15s ease;
+  transition: transform 0.18s ease, background 0.18s ease;
   animation: knobFloat 2.5s ease-in-out infinite 2.2s;
-  min-width: 44px; min-height: 44px;
 }
 .string-knob.active {
-  transform: translateY(26px) scale(0.88);
-  background: rgba(245,156,42,0.32);
+  transform: translateY(28px) scale(0.88);
+  background: rgba(245,156,42,0.30);
   animation: none;
 }
 .knob-inner {
-  width: 9px; height: 9px;
+  width: 10px; height: 10px;
   border-radius: 50%;
-  background: rgba(245,156,42,0.85);
+  background: rgba(245,156,42,0.9);
   pointer-events: none;
 }
-
 @keyframes knobFloat {
   0%,100% { transform: translateY(0); }
-  50%      { transform: translateY(7px); }
+  50%      { transform: translateY(8px); }
 }
