@@ -1,6 +1,6 @@
 // progress.js — track opened gifts and update progress bar
 const Progress = {
-  gifts: ['flowers', 'letter', 'photos', 'voicemail'],
+  gifts: ['flowers', 'letter', 'photos'],
   opened: new Set(),
   _finalUnlocked: false,
 
