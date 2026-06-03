@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Congratulations, Ellen!!! 🎓</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Dancing+Script:wght@600;700&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;}
+    html,body{width:100%;height:100%;overflow:hidden;background:#0a0614;}
+
+    #bg{
+      position:fixed;inset:0;z-index:0;
+      background:#0a0614;
+      transition:background 3.5s cubic-bezier(.4,0,.2,1);
+    }
+    #bg.lit{
+      background:radial-gradient(ellipse at 50% 55%,#2d1454 0%,#180838 50%,#0a0614 100%);
+    }
+
+    #bloom{
+      position:fixed;left:50%;top:38%;
+      transform:translate(-50%,-50%);
+      width:340px;height:340px;border-radius:50%;
+      background:radial-gradient(circle,rgba(180,120,255,.18) 0%,transparent 70%);
+      opacity:0;transition:opacity 2s ease;
+      pointer-events:none;z-index:1;
+    }
+    #bloom.on{opacity:1;}
+
+    #canvas{position:fixed;inset:0;z-index:2;pointer-events:none;}
+
+    #stage{
+      position:fixed;inset:0;z-index:3;
+      display:flex;flex-direction:column;
+      align-items:center;justify-content:center;
+      gap:32px;
+    }
+
+    #cap-wrap{
+      opacity:0;
+      will-change:transform,opacity;
+      filter:drop-shadow(0 28px 48px rgba(200,150,80,.45));
+    }
+    #cap-svg{display:block;width:160px;height:160px;}
+
+    #cap-wrap.hover{
+      animation:capFloat 3.8s ease-in-out infinite;
+    }
+    @keyframes capFloat{
+      0%,100%{transform:translateY(0px) rotate(0deg);}
+      50%     {transform:translateY(-12px) rotate(2deg);}
+    }
+
+    #tassel{transform-origin:70px 46px;}
+    #tassel.swing{animation:tSwing 1.6s cubic-bezier(.36,.07,.19,.97) 2.5;}
+    @keyframes tSwing{
+      0%  {transform:rotate(0deg);}
+      20% {transform:rotate(20deg);}
+      50% {transform:rotate(-16deg);}
+      80% {transform:rotate(10deg);}
+      100%{transform:rotate(0deg);}
+    }
+
+    #text-block{
+      text-align:center;padding:0 28px;
+      display:flex;flex-direction:column;align-items:center;gap:10px;
+      opacity:0;transform:translateY(30px);
+      transition:opacity 1.6s cubic-bezier(.22,1,.36,1),
+                 transform 1.6s cubic-bezier(.22,1,.36,1);
+    }
+    #text-block.show{opacity:1;transform:translateY(0);}
+
+    .line1{
+      font-family:'Playfair Display',serif;
+      font-size:clamp(26px,6.5vw,44px);
+      font-weight:700;color:#fdf6ec;
+      letter-spacing:.5px;line-height:1.15;
+      text-shadow:0 2px 40px rgba(200,150,80,.35);
+    }
+    .line1 span{
+      font-style:italic;
+      background:linear-gradient(100deg,#f5d878,#c9952a,#e0a0e8);
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+      background-clip:text;
+    }
+    .line2{
+      font-family:'Dancing Script',cursive;
+      font-size:clamp(18px,4.5vw,28px);
+      font-weight:600;color:rgba(253,246,236,.78);
+      opacity:0;transform:translateY(8px);
+      transition:opacity 1.2s ease .5s,transform 1.2s ease .5s;
+    }
+    #text-block.show .line2{opacity:1;transform:translateY(0);}
+
+    .divider{
+      width:0;height:1px;
+      background:linear-gradient(90deg,transparent,#c9952a,transparent);
+      transition:width 1.2s cubic-bezier(.22,1,.36,1) .7s;
+    }
+    #text-block.show .divider{width:160px;}
+
+    .line3{
+      font-family:'Lato',sans-serif;font-weight:300;
+      font-size:clamp(11px,2.5vw,13px);
+      letter-spacing:4px;text-transform:uppercase;
+      color:rgba(253,246,236,.35);
+      opacity:0;transition:opacity 1s ease 1.2s;
+    }
+    #text-block.show .line3{opacity:1;}
+
+    /* ── BACK BUTTON ── */
+    #back-btn{
+      position:fixed;
+      bottom:36px;
+      left:50%;
+      transform:translateX(-50%);
+      z-index:10;
+      opacity:0;
+      transition:opacity 1s ease;
+      pointer-events:none;
+    }
+    #back-btn.show{
+      opacity:1;
+      pointer-events:all;
+    }
+    #back-btn button{
+      display:flex;align-items:center;gap:8px;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(201,149,42,.35);
+      color:rgba(253,246,236,.65);
+      font-family:'Lato',sans-serif;
+      font-weight:300;
+      font-size:12px;
+      letter-spacing:3px;
+      text-transform:uppercase;
+      padding:11px 26px 11px 20px;
+      border-radius:100px;
+      cursor:pointer;
+      backdrop-filter:blur(10px);
+      min-width:44px;min-height:44px;
+      transition:
+        background .3s ease,
+        border-color .3s ease,
+        color .3s ease,
+        transform .2s ease,
+        box-shadow .3s ease;
+    }
+    #back-btn button:hover{
+      background:rgba(201,149,42,.15);
+      border-color:rgba(201,149,42,.7);
+      color:#fdf6ec;
+      transform:scale(1.04);
+      box-shadow:0 4px 28px rgba(201,149,42,.18);
+    }
+    #back-btn button:active{ transform:scale(.97); }
+    #back-btn button svg{
+      flex-shrink:0;
+      opacity:.75;
+      transition:transform .3s ease, opacity .3s ease;
+    }
+    #back-btn button:hover svg{
+      transform:translateX(-3px);
+      opacity:1;
+    }
+  </style>
+</head>
+<body>
+<div id="bg"></div>
+<div id="bloom"></div>
+<canvas id="canvas"></canvas>
+
+<div id="stage">
+  <div id="cap-wrap">
+    <svg id="cap-svg" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="gBoard" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%"   stop-color="#f8e080"/>
+          <stop offset="45%"  stop-color="#e8c050"/>
+          <stop offset="100%" stop-color="#b07820"/>
+        </linearGradient>
+        <linearGradient id="gShine" x1="0" y1="0" x2=".6" y2="1">
+          <stop offset="0%"  stop-color="rgba(255,255,255,.32)"/>
+          <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+        </linearGradient>
+        <linearGradient id="gLeft" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%"  stop-color="#7a5010"/>
+          <stop offset="100%" stop-color="#a07018"/>
+        </linearGradient>
+        <linearGradient id="gRight" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%"  stop-color="#9a6814"/>
+          <stop offset="100%" stop-color="#6a4808"/>
+        </linearGradient>
+        <radialGradient id="gDome" cx="42%" cy="30%" r="62%">
+          <stop offset="0%"  stop-color="#3e2070"/>
+          <stop offset="60%" stop-color="#220e48"/>
+          <stop offset="100%" stop-color="#140830"/>
+        </radialGradient>
+        <linearGradient id="gBand" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%"  stop-color="#c9952a"/>
+          <stop offset="100%" stop-color="#8a6010"/>
+        </linearGradient>
+        <linearGradient id="gCord" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%"  stop-color="#f0c96a"/>
+          <stop offset="100%" stop-color="#b07820"/>
+        </linearGradient>
+        <radialGradient id="gShadow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%"  stop-color="rgba(0,0,0,.30)"/>
+          <stop offset="100%" stop-color="rgba(0,0,0,0)"/>
+        </radialGradient>
+        <clipPath id="boardClip">
+          <polygon points="80,28 148,62 80,78 12,62"/>
+        </clipPath>
+      </defs>
+
+      <ellipse cx="80" cy="128" rx="46" ry="7" fill="url(#gShadow)"/>
+      <ellipse cx="80" cy="80" rx="36" ry="12" fill="#140830"/>
+      <path d="M44,78 Q44,50 80,48 Q116,50 116,78 L116,82 Q116,90 80,92 Q44,90 44,82 Z" fill="url(#gDome)"/>
+      <path d="M52,72 Q60,58 80,56 Q96,58 100,66" fill="none" stroke="rgba(255,255,255,.13)" stroke-width="5" stroke-linecap="round"/>
+      <ellipse cx="80" cy="79" rx="36" ry="5.5" fill="url(#gBand)" opacity=".7"/>
+      <polygon points="80,78 148,62 148,68 80,84" fill="url(#gRight)"/>
+      <polygon points="80,78 12,62 12,68 80,84"   fill="url(#gLeft)"/>
+      <polygon points="12,68 80,84 148,68 148,62 80,78 12,62" fill="#8a5e10" opacity=".5"/>
+      <polygon points="80,28 148,62 80,78 12,62" fill="url(#gBoard)"/>
+      <polygon points="80,28 148,62 80,78 12,62" fill="url(#gShine)" clip-path="url(#boardClip)"/>
+      <polygon points="80,28 148,62 80,78 12,62" fill="none" stroke="rgba(255,230,120,.25)" stroke-width=".8"/>
+      <circle cx="80" cy="46" r="5"   fill="#c9952a"/>
+      <circle cx="80" cy="46" r="3"   fill="#f0c96a"/>
+      <circle cx="79" cy="45" r="1.2" fill="rgba(255,255,255,.55)"/>
+
+      <g id="tassel">
+        <path d="M80,46 C90,46 108,52 112,68" stroke="url(#gCord)" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+        <circle cx="112" cy="70" r="5.5" fill="#c9952a"/>
+        <circle cx="110" cy="68" r="2"   fill="rgba(255,245,180,.4)"/>
+        <line x1="108" y1="75" x2="104" y2="97" stroke="#c9952a" stroke-width="2.2" stroke-linecap="round"/>
+        <line x1="111" y1="75" x2="111" y2="99" stroke="#b07820" stroke-width="2.2" stroke-linecap="round"/>
+        <line x1="114" y1="75" x2="118" y2="97" stroke="#c9952a" stroke-width="2.2" stroke-linecap="round"/>
+        <line x1="117" y1="75" x2="122" y2="94" stroke="#a06810" stroke-width="1.8" stroke-linecap="round"/>
+        <rect x="102" y="96" width="22" height="3.5" rx="1.8" fill="#8a5e10"/>
+      </g>
+    </svg>
+  </div>
+
+  <div id="text-block">
+    <div class="line1">Congratulations,<br><span>Ellen!!!</span></div>
+    <div class="divider"></div>
+    <div class="line2">I'm so proud of you. ✨</div>
+  </div>
+</div>
+
+<!-- BACK BUTTON -->
+<div id="back-btn">
+  <button onclick="goBack()">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M9 2L4 7L9 12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    Back
+  </button>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script>
+/* ════════════════════════════════
+   PARTICLE SYSTEM
+════════════════════════════════ */
+const canvas = document.getElementById('canvas');
+const ctx    = canvas.getContext('2d');
+let W, H;
+function resize(){ W = canvas.width = innerWidth; H = canvas.height = innerHeight; }
+resize(); window.addEventListener('resize', resize);
+
+const COLORS = [
+  '#c084e8','#d4a0f5','#e8c0ff','#b06ad4',
+  '#f5c6e8','#f0a0c8','#e87aaa','#ffc0d8',
+  '#f8e080','#f0c96a','#e8aa40','#ffd060',
+  '#ffffff','#fde8f8','#e8e0ff',
+];
+
+class Petal {
+  constructor(fromBurst){ this.fromBurst=fromBurst; this.init(); }
+  init(){
+    if(this.fromBurst){
+      this.x  = W/2+(Math.random()-.5)*80;
+      this.y  = H*.38;
+      const ang=-Math.PI/2+(Math.random()-.5)*Math.PI*.85;
+      const spd=5+Math.random()*10;
+      this.vx=Math.cos(ang)*spd; this.vy=Math.sin(ang)*spd-2;
+    } else {
+      this.x=Math.random()*W; this.y=-20;
+      this.vx=(Math.random()-.5)*1.8; this.vy=1.4+Math.random()*2.2;
+    }
+    this.color=COLORS[Math.floor(Math.random()*COLORS.length)];
+    this.isPetal=Math.random()<.6;
+    this.w=this.isPetal?5+Math.random()*9:4+Math.random()*6;
+    this.h=this.isPetal?this.w*2.2:this.w*.5;
+    this.rot=Math.random()*Math.PI*2;
+    this.rSpd=(Math.random()-.5)*.14;
+    this.wob=Math.random()*Math.PI*2;
+    this.wSpd=.03+Math.random()*.04;
+    this.grav=.10+Math.random()*.08;
+    this.alpha=1; this.life=1;
+    this.decay=.003+Math.random()*.004;
+    this.alive=true;
+  }
+  step(){
+    this.vy+=this.grav; this.wob+=this.wSpd;
+    this.x+=this.vx+Math.sin(this.wob)*.7;
+    this.y+=this.vy; this.rot+=this.rSpd;
+    this.life-=this.decay;
+    this.alpha=Math.max(0,this.life);
+    if(this.y>H+40||this.life<=0) this.alive=false;
+  }
+  draw(){
+    ctx.save();
+    ctx.globalAlpha=this.alpha*.92;
+    ctx.translate(this.x,this.y);
+    ctx.rotate(this.rot);
+    ctx.fillStyle=this.color;
+    if(this.isPetal){
+      ctx.beginPath();
+      ctx.ellipse(0,0,this.w*.38,this.h*.5,0,0,Math.PI*2);
+      ctx.fill();
+      ctx.strokeStyle='rgba(255,255,255,.18)';
+      ctx.lineWidth=.6;
+      ctx.beginPath();
+      ctx.moveTo(0,-this.h*.45); ctx.lineTo(0,this.h*.45);
+      ctx.stroke();
+    } else {
+      ctx.beginPath();
+      ctx.roundRect(-this.w/2,-this.h/2,this.w,this.h,1);
+      ctx.fill();
+    }
+    ctx.restore();
+  }
+}
+
+let petals=[], rafRunning=false;
+function renderLoop(){
+  ctx.clearRect(0,0,W,H);
+  petals=petals.filter(p=>p.alive);
+  petals.forEach(p=>{p.step();p.draw();});
+  if(petals.length>0) requestAnimationFrame(renderLoop);
+  else rafRunning=false;
+}
+function startRender(){ if(!rafRunning){rafRunning=true;requestAnimationFrame(renderLoop);} }
+function spawnBurst(n=150){ for(let i=0;i<n;i++) setTimeout(()=>{petals.push(new Petal(true));startRender();},i*5); }
+function spawnDrift(n=90,dur=7000){ for(let i=0;i<n;i++) setTimeout(()=>{petals.push(new Petal(false));startRender();},(i/n)*dur); }
+
+/* ════════════════════════════════
+   GSAP SEQUENCE
+════════════════════════════════ */
+const bg        = document.getElementById('bg');
+const bloom     = document.getElementById('bloom');
+const capWrap   = document.getElementById('cap-wrap');
+const tassel    = document.getElementById('tassel');
+const textBlock = document.getElementById('text-block');
+const backBtn   = document.getElementById('back-btn');
+
+gsap.set(capWrap,{y:80,opacity:0,scale:.75});
+
+const tl = gsap.timeline({delay:.4});
+tl.to(capWrap,{y:0,opacity:1,scale:1,duration:1.1,ease:'power3.out'})
+  .to(capWrap,{y:-8,duration:.28,ease:'power1.out'})
+  .to(capWrap,{y:0,duration:.28,ease:'power1.in'})
+  .add(()=>{bg.classList.add('lit');bloom.classList.add('on');},' -=.4')
+  .to(capWrap,{y:-H*.30,scale:1.15,rotation:-10,duration:.62,ease:'power2.out'})
+  .to(capWrap,{y:-H*.32,scale:1.18,rotation:-12,duration:.22,ease:'power1.out'})
+  .add(()=>{ spawnBurst(160); })
+  .to(capWrap,{y:14,scale:.96,rotation:5,duration:.58,ease:'power2.in'})
+  .to(capWrap,{y:-6,scale:1.02,rotation:-2,duration:.2,ease:'power2.out'})
+  .to(capWrap,{y:0,scale:1,rotation:0,duration:.18,ease:'power2.inOut'})
+  .add(()=>{ tassel.classList.add('swing'); capWrap.classList.add('hover'); spawnDrift(100,8000); })
+  .add(()=>{ textBlock.classList.add('show'); },'+=.35')
+  .add(()=>{ backBtn.classList.add('show'); },'+=1.8');
+
+/* ════════════════════════════════
+   BACK NAVIGATION
+   — inside iframe  → postMessage to parent to close cleanly
+   — opened directly → history.back() or go to index
+════════════════════════════════ */
+function goBack(){
+  if(window.parent && window.parent !== window){
+    window.parent.postMessage('close-gift','*');
+  } else {
+    history.length > 1 ? history.back() : window.location.href = 'index.html';
+  }
+}
+</script>
+</body>
+</html>
