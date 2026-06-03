@@ -134,14 +134,12 @@
     /* ── PHOTO FRAME ── */
     .photo-frame {
       width:100%;
-      /* Dynamic height: portrait ~130%, landscape ~70%, default 100% */
       padding-top:100%;
       position:relative; overflow:hidden;
       background:#1a1008;
       outline:2px solid rgba(0,0,0,0.5);
       outline-offset:-2px;
     }
-    /* Allow image to set the aspect ratio */
     .photo-frame.portrait  { padding-top:130%; }
     .photo-frame.landscape { padding-top:70%;  }
     .photo-frame.square    { padding-top:100%; }
@@ -220,7 +218,6 @@
     .card-exit-left  { animation:cardExitLeft  0.46s cubic-bezier(0.4,0,0.8,0.6) forwards; }
     .card-exit-right { animation:cardExitRight 0.46s cubic-bezier(0.4,0,0.8,0.6) forwards; }
 
-    /* Slideshow crossfade */
     @keyframes slideFadeIn {
       0%   { opacity:0; transform:translate(-50%,-50%) scale(1.04); }
       100% { opacity:1; transform:translate(-50%,-50%) scale(1); }
@@ -389,7 +386,6 @@
       background-size:54px 100%, 100% 100%;
     }
 
-    /* Curtain fold shadow */
     .curtain-inner::after {
       content:''; position:absolute; top:0; bottom:0; width:16px;
       background:rgba(0,0,0,0.35);
@@ -397,7 +393,6 @@
     .curtain-left  .curtain-inner::after { right:0; }
     .curtain-right .curtain-inner::after { left:0; }
 
-    /* Curtain top pelmet */
     .curtain-top {
       position:absolute; top:0; left:0; right:0; height:48px; z-index:11;
       background:linear-gradient(180deg, rgba(60,12,0,0.95) 0%, rgba(40,8,0,0.85) 100%);
@@ -412,7 +407,6 @@
         transparent 6px, transparent 14px);
     }
 
-    /* Opening curtain animations */
     @keyframes curtainOpenLeft {
       0%   { transform:translateX(0); }
       100% { transform:translateX(-100%); }
@@ -429,7 +423,6 @@
     .curtain-left.closing   { animation:curtainCloseLeft  0.9s cubic-bezier(0.4,0,0.2,1) forwards; }
     .curtain-right.closing  { animation:curtainCloseRight 0.9s cubic-bezier(0.4,0,0.2,1) forwards; }
 
-    /* Film leader strip */
     #film-leader {
       position:absolute; inset:0; z-index:5;
       background:#f5e6c8;
@@ -468,7 +461,6 @@
       color:#1a0a00; letter-spacing:4px; margin-top:4px;
     }
 
-    /* Sprocket holes on leader */
     #film-leader::before, #film-leader::after {
       content:''; position:absolute; top:0; bottom:0; width:clamp(16px,5vw,28px);
       background: repeating-linear-gradient(0deg,
@@ -494,7 +486,6 @@
     #film-leader.playing { animation:leaderShow 2.5s ease forwards; }
     #film-leader.playing .leader-content { animation:leaderFlash 0.6s steps(1) 0.2s 3; }
 
-    /* Projector screen */
     #proj-screen {
       position:absolute; inset:0; z-index:4;
       display:flex; align-items:center; justify-content:center;
@@ -507,13 +498,11 @@
       width:auto; height:auto;
       object-fit:contain;
       display:block;
-      /* Cinematic grade */
       filter:sepia(0.25) contrast(1.15) brightness(0.9) saturate(0.75);
       transition:opacity 0s;
       opacity:1;
     }
 
-    /* Projector scan line overlay on screen */
     #proj-screen::after {
       content:''; position:absolute; inset:0; z-index:2; pointer-events:none;
       background: repeating-linear-gradient(0deg,
@@ -522,13 +511,11 @@
       mix-blend-mode:multiply;
     }
 
-    /* Vignette on proj screen */
     #proj-screen::before {
       content:''; position:absolute; inset:0; z-index:3; pointer-events:none;
       background:radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.7) 100%);
     }
 
-    /* Film flicker */
     @keyframes projFlicker {
       0%,100%{ opacity:1; }
       92%    { opacity:1; }
@@ -539,13 +526,11 @@
     }
     #proj-img.flickering { animation:projFlicker 3.5s ease infinite; }
 
-    /* Image transition in projector */
     @keyframes projImgIn  { from{opacity:0;} to{opacity:1;} }
     @keyframes projImgOut { from{opacity:1;} to{opacity:0;} }
     .proj-fade-in  { animation:projImgIn  0.6s ease forwards; }
     .proj-fade-out { animation:projImgOut 0.4s ease forwards; }
 
-    /* Projector controls */
     #proj-controls {
       position:absolute; bottom:max(24px,env(safe-area-inset-bottom)); left:50%;
       transform:translateX(-50%); z-index:15;
@@ -574,9 +559,7 @@
 
     .pctrl-sep { width:1px; height:28px; background:rgba(200,147,58,0.2); }
 
-    .pctrl-speed {
-      display:flex; gap:4px;
-    }
+    .pctrl-speed { display:flex; gap:4px; }
     .pctrl-speed-btn {
       padding:4px 8px; border-radius:2px;
       background:transparent; border:1px solid rgba(200,147,58,0.2);
@@ -586,7 +569,6 @@
     }
     .pctrl-speed-btn.on { background:rgba(200,147,58,0.2); border-color:rgba(200,147,58,0.7); color:rgba(200,147,58,1); }
 
-    /* Close projector button */
     #proj-close {
       position:absolute; top:max(14px,env(safe-area-inset-top)); right:16px; z-index:15;
       background:rgba(0,0,0,0.7); border:1px solid rgba(200,147,58,0.35);
@@ -596,14 +578,12 @@
     }
     #proj-close:active { transform:scale(0.95); }
 
-    /* Projector counter */
     #proj-counter {
       position:absolute; top:max(14px,env(safe-area-inset-top)); left:16px; z-index:15;
       font-family:'Bebas Neue', sans-serif; font-size:20px; letter-spacing:3px;
       color:rgba(200,147,58,0.45);
     }
 
-    /* Caption in projector */
     #proj-caption {
       position:absolute; bottom:max(90px,calc(80px + env(safe-area-inset-bottom)));
       left:50%; transform:translateX(-50%); z-index:15;
@@ -622,7 +602,6 @@
       color:rgba(200,147,58,0.7); letter-spacing:3px; margin-top:4px;
     }
 
-    /* Progress in projector */
     #proj-progress-wrap {
       position:absolute; top:0; left:0; right:0; height:3px; z-index:15;
       background:rgba(200,147,58,0.1);
@@ -633,7 +612,6 @@
       transition:width linear;
     }
 
-    /* Projector screen touch zones */
     #proj-tap-prev, #proj-tap-next {
       position:absolute; top:0; bottom:0; width:35%; z-index:8; cursor:pointer;
     }
@@ -779,18 +757,9 @@
       90% { opacity:var(--m-op); }
       100%{ transform:translate(var(--m-dx),var(--m-dy)) rotate(360deg); opacity:0; }
     }
-
-    /* ── TAPE REEL decorative in leader ── */
-    @keyframes reelSpin { from{transform:rotate(0deg);} to{transform:rotate(360deg);} }
-    #leader-reel {
-      width:clamp(50px,15vw,90px); height:clamp(50px,15vw,90px);
-      position:relative;
-    }
-    #leader-reel svg { width:100%; height:100%; animation:reelSpin 1.2s linear infinite; }
   </style>
 </head>
 <body>
-
 
 <!-- Opening title card -->
 <div id="title-card">
@@ -826,9 +795,9 @@
       <button class="nav-arrow" id="nextBtn">&#8594;</button>
     </div>
     <div class="play-btn-wrap">
-      <button class="play-btn" id="playBtn" onclick="openProjector()">
+      <button class="play-btn" id="playBtn">
         <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-        PLAY 
+        PLAY
       </button>
     </div>
   </div>
@@ -866,12 +835,11 @@
   </div>
 
   <!-- Screen -->
-
-    <div id="proj-beam"></div>
-    <div id="vig-pulse"></div>
-    <div id="film-scratches"></div>
-    <div id="proj-dust"></div>
-    <div id="quote-overlay"><div class="quote-text" id="quote-text"></div></div>
+  <div id="proj-beam"></div>
+  <div id="vig-pulse"></div>
+  <div id="film-scratches"></div>
+  <div id="proj-dust"></div>
+  <div id="quote-overlay"><div class="quote-text" id="quote-text"></div></div>
   <div id="proj-screen">
     <div id="proj-tap-prev"></div>
     <div id="proj-tap-next"></div>
@@ -885,7 +853,7 @@
   <div id="proj-counter">01 / 48</div>
 
   <!-- Close -->
-  <button id="proj-close" onclick="closeProjector()">✕ CLOSE</button>
+  <button id="proj-close">✕ CLOSE</button>
 
   <!-- Controls -->
   <div id="proj-controls">
@@ -910,55 +878,59 @@
 <script>
   /* ── UTILS ── */
   function goBack() {
-    if (window.parent && window.parent !== window) window.parent.postMessage('close-gift','*');
-    else window.history.back();
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage('close-gift', '*');
+    } else {
+      window.history.back();
+    }
   }
-  function pad(n){ return String(n).padStart(2,'0'); }
+
+  function pad(n) { return String(n).padStart(2, '0'); }
 
   /* ══════════════════════════════════════════
-     PHOTO DATA — exact extensions per file
+     PHOTO DATA
   ══════════════════════════════════════════ */
   const captions = [
-	  'A memory',
-	  'A moment',
-	  'Captured',
-	  'Remember this',
-	  'Good times',
-	  'Worth keeping',
-	  'A special day',
-	  'One for the books',
-	  'Looking back',
-	  'A snapshot',
-	  'Memories made',
-	  'Unforgettable',
-	  'A little moment',
-	  'Just like yesterday',
-	  'Another memory',
-	  'The story continues'
-	];
+    'A memory',
+    'A moment',
+    'Captured',
+    'Remember this',
+    'Good times',
+    'Worth keeping',
+    'A special day',
+    'One for the books',
+    'Looking back',
+    'A snapshot',
+    'Memories made',
+    'Unforgettable',
+    'A little moment',
+    'Just like yesterday',
+    'Another memory',
+    'The story continues'
+  ];
+
   const dates = [
-	 
-	  'MEMORY CAPTURED',
-	  'LOOKING BACK',
-	  'SPECIAL MOMENT',
-	  'ON THIS DAY',
-	  'REMEMBER THIS',
-	  'GOOD TIMES',
-	  'CAPTURED IN TIME',
-	  'A MEMORY',
-	  'TREASURED',
-	  'UNFORGETTABLE',
-	  'THE JOURNEY',
-	  'MILESTONE',
-	  'MEMORIES MADE',
-	  'FOREVER KEPT',
-	  'A MOMENT'
-	  'CLASS OF 2026',
-	];
+    'MEMORY CAPTURED',
+    'LOOKING BACK',
+    'SPECIAL MOMENT',
+    'ON THIS DAY',
+    'REMEMBER THIS',
+    'GOOD TIMES',
+    'CAPTURED IN TIME',
+    'A MEMORY',
+    'TREASURED',
+    'UNFORGETTABLE',
+    'THE JOURNEY',
+    'MILESTONE',
+    'MEMORIES MADE',
+    'FOREVER KEPT',
+    'A MOMENT',
+    'CLASS OF 2026'
+  ];
 
   // jpeg: 10,13,14,15,46,47,48 | png: 11 | rest: jpg
   function getExt(n) {
-    if ([10,13,14,15,46,47,48].includes(n)) return 'jpeg';
+    if ([10, 13, 14, 15, 46, 47, 48].includes(n)) return 'jpeg';
     if (n === 11) return 'png';
     return 'jpg';
   }
@@ -974,37 +946,36 @@
     });
   }
 
-  const rots = [0,0,0,0,0,0,0,0];
+  const rots = [0, 0, 0, 0, 0, 0, 0, 0];
 
   /* ══════════════════════════════════════════
      MAIN VIEWER STATE
   ══════════════════════════════════════════ */
   let current = 0;
   let busy    = false;
-  const stage      = document.getElementById('stage');
-  const filmstrip  = document.getElementById('filmstrip');
-  const filmCounter= document.getElementById('filmCounter');
+  const stage       = document.getElementById('stage');
+  const filmstrip   = document.getElementById('filmstrip');
+  const filmCounter = document.getElementById('filmCounter');
 
-  function updateCounter(){ filmCounter.textContent = pad(current+1)+' / '+pad(photos.length); }
+  function updateCounter() {
+    filmCounter.textContent = pad(current + 1) + ' / ' + pad(photos.length);
+  }
 
-  /* Detect image orientation */
   function detectOrientation(img, frame) {
     if (!img.naturalWidth || !img.naturalHeight) return;
     const ratio = img.naturalWidth / img.naturalHeight;
-    frame.classList.remove('portrait','landscape','square');
-    if      (ratio < 0.85)  frame.classList.add('portrait');
-    else if (ratio > 1.15)  frame.classList.add('landscape');
-    else                    frame.classList.add('square');
+    frame.classList.remove('portrait', 'landscape', 'square');
+    if      (ratio < 0.85) frame.classList.add('portrait');
+    else if (ratio > 1.15) frame.classList.add('landscape');
+    else                   frame.classList.add('square');
   }
 
-  /* Flash overlay */
   const flashEl = document.getElementById('flash-overlay');
   function doFlash() {
     flashEl.classList.add('flash');
     setTimeout(() => flashEl.classList.remove('flash'), 120);
   }
 
-  /* Build polaroid card */
   function makeCard(idx) {
     const p   = photos[idx];
     const rot = rots[idx % rots.length];
@@ -1013,7 +984,7 @@
     card.style.setProperty('--rot', rot + 'deg');
     card.innerHTML = `
       <div class="photo-frame" id="frame-${idx}">
-        <div class="ph-wrap"><span>📷</span><small>photo ${idx+1}</small></div>
+        <div class="ph-wrap"><span>📷</span><small>photo ${idx + 1}</small></div>
         <div class="photo-grade"></div>
         <img src="" alt="${p.caption}" style="display:none">
         <div class="date-stamp">${p.date}</div>
@@ -1028,7 +999,9 @@
     const frame = card.querySelector('.photo-frame');
     const tmp   = new Image();
     tmp.onload  = () => {
-      img.src = p.src; img.style.display='block'; ph.style.display='none';
+      img.src = p.src;
+      img.style.display = 'block';
+      ph.style.display  = 'none';
       detectOrientation(tmp, frame);
     };
     tmp.onerror = () => {};
@@ -1036,22 +1009,19 @@
     return card;
   }
 
-  /* Place first card */
   let activeCard = makeCard(0);
   stage.appendChild(activeCard);
   updateCounter();
 
-  /* Filmstrip sync */
   function updateStrip() {
-    document.querySelectorAll('.film-frame').forEach((f,i) =>
+    document.querySelectorAll('.film-frame').forEach((f, i) =>
       f.classList.toggle('active', i === current)
     );
     const el = filmstrip.children[current];
-    if (el) el.scrollIntoView({ behavior:'smooth', inline:'center', block:'nearest' });
+    if (el) el.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
     updateCounter();
   }
 
-  /* Navigate */
   function navigate(dir, slideMode) {
     if (busy) return false;
     const next = current + dir;
@@ -1059,7 +1029,7 @@
       if (!slideMode) {
         const rot = rots[current % rots.length];
         activeCard.style.transition = 'transform 0.18s cubic-bezier(0.22,1,0.36,1)';
-        activeCard.style.transform  = `translate(-50%,-50%) rotate(${rot}deg) translateX(${dir*16}px)`;
+        activeCard.style.transform  = `translate(-50%,-50%) rotate(${rot}deg) translateX(${dir * 16}px)`;
         setTimeout(() => {
           activeCard.style.transform = `translate(-50%,-50%) rotate(${rot}deg)`;
           setTimeout(() => { activeCard.style.transition = ''; }, 220);
@@ -1077,7 +1047,7 @@
     const exitCls = dir === 1 ? 'card-exit-left' : 'card-exit-right';
     activeCard.style.zIndex = '3';
     activeCard.classList.add(exitCls);
-    setTimeout(() => { incoming.style.zIndex='2'; incoming.classList.add('card-entering'); }, 85);
+    setTimeout(() => { incoming.style.zIndex = '2'; incoming.classList.add('card-entering'); }, 85);
     setTimeout(() => {
       activeCard.remove();
       incoming.classList.remove('card-entering');
@@ -1098,14 +1068,15 @@
   photos.forEach((p, i) => {
     const div = document.createElement('div');
     div.className = 'film-frame' + (i === 0 ? ' active' : '');
-    div.setAttribute('data-num', pad(i+1));
+    div.setAttribute('data-num', pad(i + 1));
     const img = document.createElement('img');
     img.alt = p.caption;
     img.src = p.src;
     img.onerror = () => {
-      img.style.display='none';
+      img.style.display = 'none';
       const ph = document.createElement('div');
-      ph.className='film-placeholder'; ph.innerHTML='📷';
+      ph.className = 'film-placeholder';
+      ph.innerHTML = '📷';
       div.appendChild(ph);
     };
     div.appendChild(img);
@@ -1124,17 +1095,20 @@
   /* Touch swipe */
   let tx = 0, dragging = false;
   stage.addEventListener('touchstart', e => {
-    if (busy) return; tx = e.touches[0].clientX; dragging = true;
+    if (busy) return;
+    tx = e.touches[0].clientX;
+    dragging = true;
     activeCard.style.transition = 'none';
-  }, {passive:true});
+  }, { passive: true });
   stage.addEventListener('touchmove', e => {
     if (!dragging || busy) return;
     const dx  = e.touches[0].clientX - tx;
     const rot = rots[current % rots.length];
-    activeCard.style.transform = `translate(calc(-50% + ${dx*0.42}px),-50%) rotate(${rot+dx*0.022}deg)`;
-  }, {passive:true});
+    activeCard.style.transform = `translate(calc(-50% + ${dx * 0.42}px),-50%) rotate(${rot + dx * 0.022}deg)`;
+  }, { passive: true });
   stage.addEventListener('touchend', e => {
-    if (!dragging) return; dragging = false;
+    if (!dragging) return;
+    dragging = false;
     const dx = e.changedTouches[0].clientX - tx;
     if (Math.abs(dx) > 38) navigate(dx < 0 ? 1 : -1);
     else {
@@ -1142,17 +1116,17 @@
       activeCard.style.transition = 'transform 0.35s cubic-bezier(0.22,1,0.36,1)';
       activeCard.style.transform  = `translate(-50%,-50%) rotate(${rot}deg)`;
     }
-  }, {passive:true});
+  }, { passive: true });
 
   /* Desktop 3D tilt */
   stage.addEventListener('mousemove', e => {
     if (!activeCard || busy) return;
-    const r   = stage.getBoundingClientRect();
-    const dx  = (e.clientX - r.left - r.width/2)  / (r.width/2);
-    const dy  = (e.clientY - r.top  - r.height/2) / (r.height/2);
+    const r  = stage.getBoundingClientRect();
+    const dx = (e.clientX - r.left - r.width / 2)  / (r.width / 2);
+    const dy = (e.clientY - r.top  - r.height / 2) / (r.height / 2);
     const rot = rots[current % rots.length];
     activeCard.style.transition = 'transform 0.2s ease';
-    activeCard.style.transform  = `translate(-50%,-50%) rotate(${rot+dx*2}deg) rotateX(${-dy*4}deg) rotateY(${dx*4}deg)`;
+    activeCard.style.transform  = `translate(-50%,-50%) rotate(${rot + dx * 2}deg) rotateX(${-dy * 4}deg) rotateY(${dx * 4}deg)`;
   });
   stage.addEventListener('mouseleave', () => {
     if (!activeCard || busy) return;
@@ -1206,7 +1180,7 @@
     "Forever in our hearts.",
   ];
 
-  const kbClasses = ['kb1','kb2','kb3'];
+  const kbClasses = ['kb1', 'kb2', 'kb3'];
 
   function setProjPlayIcon(playing) {
     pcPlayIcon.querySelector('path').setAttribute('d', playing ? iconPause : iconPlay);
@@ -1219,7 +1193,7 @@
   }
 
   function applyKenBurns(dur) {
-    projImg.classList.remove('kb1','kb2','kb3');
+    projImg.classList.remove('kb1', 'kb2', 'kb3');
     void projImg.offsetWidth;
     projImg.style.setProperty('--kb-dur', dur + 'ms');
     projImg.classList.add(kbClasses[kbIdx % kbClasses.length]);
@@ -1247,7 +1221,7 @@
 
   function updateProjUI(animate) {
     const p = photos[projIndex];
-    projCounter.textContent = pad(projIndex+1)+' / '+pad(photos.length);
+    projCounter.textContent = pad(projIndex + 1) + ' / ' + pad(photos.length);
     projCapText.textContent = p.caption;
     projCapDate.textContent = p.date;
     projCaption.classList.remove('show');
@@ -1258,7 +1232,7 @@
       doFlash();
       projImg.classList.add('proj-fade-out');
       setTimeout(() => {
-        projImg.classList.remove('proj-fade-out','kb1','kb2','kb3');
+        projImg.classList.remove('proj-fade-out', 'kb1', 'kb2', 'kb3');
         loadProjImage(projIndex, () => {
           projImg.classList.add('proj-fade-in');
           applyKenBurns(projSpeed + 600);
@@ -1285,6 +1259,7 @@
     projProgress.style.transition = `width ${projSpeed}ms linear`;
     projProgress.style.width = '100%';
   }
+
   function stopProgress() {
     projProgress.style.transition = 'none';
     projProgress.style.width = '0%';
@@ -1323,7 +1298,8 @@
       startProgress();
       projInterval = setInterval(() => {
         projIndex = (projIndex + 1) % photos.length;
-        updateProjUI(true); startProgress();
+        updateProjUI(true);
+        startProgress();
       }, projSpeed);
     }
     showControls();
@@ -1337,7 +1313,8 @@
       startProgress();
       projInterval = setInterval(() => {
         projIndex = (projIndex + 1) % photos.length;
-        updateProjUI(true); startProgress();
+        updateProjUI(true);
+        startProgress();
       }, projSpeed);
     }
     showControls();
@@ -1346,17 +1323,16 @@
   function openProjector() {
     projIndex = current;
     overlay.classList.add('visible');
-    curtainLeft.classList.remove('opening','closing');
-    curtainRight.classList.remove('opening','closing');
+    curtainLeft.classList.remove('opening', 'closing');
+    curtainRight.classList.remove('opening', 'closing');
     curtainLeft.style.transform  = '';
     curtainRight.style.transform = '';
     projCaption.classList.remove('show');
     hideQuote();
-    projImg.classList.remove('kb1','kb2','kb3');
+    projImg.classList.remove('kb1', 'kb2', 'kb3');
     loadProjImage(projIndex, () => {});
-    projCounter.textContent = pad(projIndex+1)+' / '+pad(photos.length);
+    projCounter.textContent = pad(projIndex + 1) + ' / ' + pad(photos.length);
 
-    // Film leader countdown
     filmLeader.classList.remove('playing');
     void filmLeader.offsetWidth;
     let count = 3;
@@ -1370,7 +1346,6 @@
 
     startCrackle();
 
-    // Open curtains after leader
     setTimeout(() => {
       filmLeader.classList.remove('playing');
       curtainLeft.classList.add('opening');
@@ -1402,19 +1377,20 @@
       curtainLeft.classList.remove('closing');
       curtainRight.classList.remove('closing');
       projCaption.classList.remove('show');
-      projImg.classList.remove('flickering','kb1','kb2','kb3');
+      projImg.classList.remove('flickering', 'kb1', 'kb2', 'kb3');
       projImg.src = '';
     }, 950);
   }
 
-  document.getElementById('pc-prev').addEventListener('click',  () => projGoPrev());
-  document.getElementById('pc-next').addEventListener('click',  () => projGoNext());
-  document.getElementById('pc-play').addEventListener('click',  () => projTogglePlay());
-  document.getElementById('playBtn').addEventListener('click',  () => openProjector());
+  /* Wire up all buttons — no inline onclick needed */
+  document.getElementById('pc-prev').addEventListener('click',    () => projGoPrev());
+  document.getElementById('pc-next').addEventListener('click',    () => projGoNext());
+  document.getElementById('pc-play').addEventListener('click',    () => projTogglePlay());
+  document.getElementById('playBtn').addEventListener('click',    () => openProjector());
   document.getElementById('proj-close').addEventListener('click', () => closeProjector());
   document.getElementById('proj-tap-prev').addEventListener('click', () => projGoPrev());
   document.getElementById('proj-tap-next').addEventListener('click', () => projGoNext());
-  document.getElementById('proj-screen').addEventListener('click', () => showControls());
+  document.getElementById('proj-screen').addEventListener('click',   () => showControls());
 
   document.querySelectorAll('.pctrl-speed-btn').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -1426,7 +1402,8 @@
         startProgress();
         projInterval = setInterval(() => {
           projIndex = (projIndex + 1) % photos.length;
-          updateProjUI(true); startProgress();
+          updateProjUI(true);
+          startProgress();
         }, projSpeed);
       }
       showControls();
@@ -1435,18 +1412,18 @@
 
   document.addEventListener('keydown', e => {
     if (!overlay.classList.contains('visible')) return;
-    if (e.key === 'ArrowRight')            projGoNext();
-    if (e.key === 'ArrowLeft')             projGoPrev();
+    if (e.key === 'ArrowRight')           projGoNext();
+    if (e.key === 'ArrowLeft')            projGoPrev();
     if (e.key === ' ' || e.key === 'k') { e.preventDefault(); projTogglePlay(); }
-    if (e.key === 'Escape')                closeProjector();
+    if (e.key === 'Escape')               closeProjector();
   });
 
   let pTx = 0;
-  overlay.addEventListener('touchstart', e => { pTx = e.touches[0].clientX; }, {passive:true});
+  overlay.addEventListener('touchstart', e => { pTx = e.touches[0].clientX; }, { passive: true });
   overlay.addEventListener('touchend',   e => {
     const dx = e.changedTouches[0].clientX - pTx;
     if (Math.abs(dx) > 50) { dx < 0 ? projGoNext() : projGoPrev(); }
-  }, {passive:true});
+  }, { passive: true });
 
   /* ══════════════════════════════════════════
      VINYL CRACKLE AUDIO
@@ -1459,48 +1436,54 @@
     try {
       if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       if (audioCtx.state === 'suspended') audioCtx.resume();
-      if (crackleSrc) { try { crackleSrc.stop(); } catch(e){} }
+      if (crackleSrc) { try { crackleSrc.stop(); } catch(e) {} }
 
       const bufLen = audioCtx.sampleRate * 2;
       const buf    = audioCtx.createBuffer(1, bufLen, audioCtx.sampleRate);
       const data   = buf.getChannelData(0);
       for (let i = 0; i < bufLen; i++) {
-        data[i] = Math.random() < 0.003 ? (Math.random()*2-1)*0.6 : 0;
+        data[i] = Math.random() < 0.003 ? (Math.random() * 2 - 1) * 0.6 : 0;
       }
       crackleSrc  = audioCtx.createBufferSource();
       crackleGain = audioCtx.createGain();
       const lp    = audioCtx.createBiquadFilter();
-      lp.type = 'lowpass'; lp.frequency.value = 3000;
-      crackleSrc.buffer = buf; crackleSrc.loop = true;
+      lp.type = 'lowpass';
+      lp.frequency.value = 3000;
+      crackleSrc.buffer = buf;
+      crackleSrc.loop   = true;
       crackleGain.gain.value = 0.06;
-      crackleSrc.connect(lp); lp.connect(crackleGain); crackleGain.connect(audioCtx.destination);
+      crackleSrc.connect(lp);
+      lp.connect(crackleGain);
+      crackleGain.connect(audioCtx.destination);
       crackleSrc.start();
     } catch(e) {}
   }
 
   function stopCrackle() {
-    try { if (crackleGain) crackleGain.gain.setTargetAtTime(0, audioCtx.currentTime, 0.4); } catch(e){}
+    try {
+      if (crackleGain) crackleGain.gain.setTargetAtTime(0, audioCtx.currentTime, 0.4);
+    } catch(e) {}
   }
 
   /* ══════════════════════════════════════════
      BOKEH FLOATING LIGHTS
   ══════════════════════════════════════════ */
-  (function(){
+  (function() {
     const c = document.getElementById('bokeh');
     for (let i = 0; i < 18; i++) {
       const d  = document.createElement('div');
       d.className = 'bokeh-dot';
-      const sz = 6 + Math.random()*28;
-      const op = 0.04 + Math.random()*0.09;
+      const sz = 6 + Math.random() * 28;
+      const op = 0.04 + Math.random() * 0.09;
       d.style.cssText = [
         `width:${sz}px`, `height:${sz}px`,
-        `left:${Math.random()*100}%`,
-        `top:${20+Math.random()*70}%`,
+        `left:${Math.random() * 100}%`,
+        `top:${20 + Math.random() * 70}%`,
         `background:rgba(200,147,58,${op.toFixed(2)})`,
-        `filter:blur(${sz*0.5}px)`,
+        `filter:blur(${sz * 0.5}px)`,
         `--bk-op:${op}`,
-        `animation-duration:${8+Math.random()*12}s`,
-        `animation-delay:${-Math.random()*15}s`,
+        `animation-duration:${8 + Math.random() * 12}s`,
+        `animation-delay:${-Math.random() * 15}s`,
       ].join(';');
       c.appendChild(d);
     }
@@ -1509,15 +1492,15 @@
   /* ══════════════════════════════════════════
      FILM SCRATCH LINES
   ══════════════════════════════════════════ */
-  (function(){
+  (function() {
     const c = document.getElementById('film-scratches');
     for (let i = 0; i < 5; i++) {
       const s = document.createElement('div');
       s.className = 'scratch';
       s.style.cssText = [
-        `left:${10+Math.random()*80}%`,
-        `animation-duration:${3+Math.random()*4}s`,
-        `animation-delay:${-Math.random()*8}s`,
+        `left:${10 + Math.random() * 80}%`,
+        `animation-duration:${3 + Math.random() * 4}s`,
+        `animation-delay:${-Math.random() * 8}s`,
       ].join(';');
       c.appendChild(s);
     }
@@ -1526,22 +1509,22 @@
   /* ══════════════════════════════════════════
      PROJECTOR DUST MOTES
   ══════════════════════════════════════════ */
-  (function(){
+  (function() {
     const c = document.getElementById('proj-dust');
     for (let i = 0; i < 30; i++) {
       const m  = document.createElement('div');
       m.className = 'proj-mote';
-      const sz = 1 + Math.random()*2;
-      const op = 0.2 + Math.random()*0.5;
+      const sz = 1 + Math.random() * 2;
+      const op = 0.2 + Math.random() * 0.5;
       m.style.cssText = [
         `width:${sz}px`, `height:${sz}px`,
-        `left:${Math.random()*100}%`,
-        `top:${Math.random()*100}%`,
+        `left:${Math.random() * 100}%`,
+        `top:${Math.random() * 100}%`,
         `--m-op:${op}`,
-        `--m-dx:${-20+Math.random()*40}px`,
-        `--m-dy:${-40-Math.random()*60}px`,
-        `animation-duration:${5+Math.random()*9}s`,
-        `animation-delay:${-Math.random()*12}s`,
+        `--m-dx:${-20 + Math.random() * 40}px`,
+        `--m-dy:${-40 - Math.random() * 60}px`,
+        `animation-duration:${5 + Math.random() * 9}s`,
+        `animation-delay:${-Math.random() * 12}s`,
       ].join(';');
       c.appendChild(m);
     }
@@ -1550,19 +1533,21 @@
   /* ══════════════════════════════════════════
      FILM GRAIN CANVAS
   ══════════════════════════════════════════ */
-  (function(){
-    const c = document.getElementById('grain');
+  (function() {
+    const c   = document.getElementById('grain');
     const ctx = c.getContext('2d');
-    function resize(){ c.width=innerWidth; c.height=innerHeight; }
-    resize(); window.addEventListener('resize', resize);
-    function draw(){
+    function resize() { c.width = innerWidth; c.height = innerHeight; }
+    resize();
+    window.addEventListener('resize', resize);
+    function draw() {
       const id = ctx.createImageData(c.width, c.height);
       const d  = id.data;
-      for (let i = 0; i < d.length; i+=4) {
-        const v = Math.random()*255|0;
-        d[i]=d[i+1]=d[i+2]=v; d[i+3]=255;
+      for (let i = 0; i < d.length; i += 4) {
+        const v = Math.random() * 255 | 0;
+        d[i] = d[i + 1] = d[i + 2] = v;
+        d[i + 3] = 255;
       }
-      ctx.putImageData(id,0,0);
+      ctx.putImageData(id, 0, 0);
       requestAnimationFrame(draw);
     }
     draw();
@@ -1571,18 +1556,18 @@
   /* ══════════════════════════════════════════
      DUST PARTICLES (background)
   ══════════════════════════════════════════ */
-  (function(){
+  (function() {
     const c = document.getElementById('dust');
     for (let i = 0; i < 22; i++) {
       const p = document.createElement('div');
       p.className = 'particle';
       p.style.cssText = [
-        `left:${Math.random()*100}%`,
-        `width:${Math.random()<0.5?1:2}px`,
-        `height:${Math.random()<0.5?1:2}px`,
-        `animation-duration:${9+Math.random()*16}s`,
-        `animation-delay:${-Math.random()*20}s`,
-        `opacity:${0.15+Math.random()*0.4}`,
+        `left:${Math.random() * 100}%`,
+        `width:${Math.random() < 0.5 ? 1 : 2}px`,
+        `height:${Math.random() < 0.5 ? 1 : 2}px`,
+        `animation-duration:${9 + Math.random() * 16}s`,
+        `animation-delay:${-Math.random() * 20}s`,
+        `opacity:${0.15 + Math.random() * 0.4}`,
       ].join(';');
       c.appendChild(p);
     }
@@ -1592,8 +1577,7 @@
      OPENING TITLE CARD auto-dismiss
   ══════════════════════════════════════════ */
   const titleCard = document.getElementById('title-card');
-  setTimeout(() => { if(titleCard) titleCard.classList.add('gone'); }, 4400);
-
+  setTimeout(() => { if (titleCard) titleCard.classList.add('gone'); }, 4400);
 </script>
 </body>
 </html>

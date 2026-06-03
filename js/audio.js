@@ -26,7 +26,7 @@ const AudioManager = {
     if (!this.bgMusic || this.isStarted) return;
     this.isStarted = true;
     if (!this.isMuted) {
-      this.bgMusic.volume = 0.3;
+      this.bgMusic.volume = 0.05;
       this.bgMusic.play().catch(() => {});
     }
   },
