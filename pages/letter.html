@@ -323,7 +323,7 @@
       <div class="crease" style="top:66%;"></div>
       <div class="small-seal">🎓</div>
 
-      <div class="letter-date" id="lDate"></div>
+      <div class="letter-date"     id="lDate"></div>
       <div class="letter-greeting" id="lGreeting"></div>
       <div class="letter-body" id="lBody">
         <p id="lP1"></p>
@@ -361,15 +361,15 @@
   ══════════════════════ */
   const letterContent = {
     date:      'June 2026',
-    greeting:  'My dearest Graduate,',
+    greeting:  'Congratulations, Ellen!!!',
     paragraphs: [
-      'Can you believe this day has finally arrived? I still remember when you first started this journey — nervous, excited, full of dreams. And now look at you. You did it.',
-      'Every late night, every challenge you pushed through, every moment you chose to keep going even when it was hard — it all led to this. I have been proud of you every single step of the way.',
-      'This graduation is not just an ending. It\'s the beginning of everything you\'ve been working toward. The world is ready for you, and trust me — you are more than ready for it.',
-      'Never forget your worth. Never stop dreaming. And whenever life gets hard, remember that you\'ve already proven you can overcome anything.',
-      'Thank you for letting me be part of your story.',
+      "I just want to say how proud I am of you. Sobrang deserve mo 'tong moment na 'to after all the hard work, puyat, stress, and everything you had to overcome. Seeing you finally reach this milestone makes me really happy.",
+      "Hindi ko alam if nasasabi ko 'to enough, pero sobrang admirable mo talaga because of the kind of person you are. The way you stay strong, keep trying, and still show up kahit hindi laging madali ang gaan nun tingnan, pero alam kong hindi madali.",
+      "Seeing how far you've come is honestly inspiring, and nakakatuwang makita yung growth mo through everything.",
+      "Never forget your worth. Never stop dreaming. And whenever life gets hard, remember that you've already proven you can overcome anything.",
+      "I hope you take time to appreciate yourself today, kasi sobrang deserve mo lahat ng good things coming your way. Super proud ako sa'yo, always. And I can't wait to see all the amazing things you'll do next.",
     ],
-  
+    closing:   'With love,',
     signature: 'Your biggest fan 🎓',
   };
 
@@ -392,7 +392,7 @@
 
     const tl = gsap.timeline({ defaults:{ ease:'power3.out' } });
 
-    /* 1 ── seal gently spins and fades */
+    /* 1 — seal gently spins and fades */
     tl.to(seal, {
       scale: 1.15, rotate: 10, duration: 0.2, ease: 'power2.out'
     })
@@ -404,18 +404,18 @@
       opacity: 0, y: -6, duration: 0.3, ease: 'power2.out'
     }, '<');
 
-    /* 2 ── envelope lifts gently (anticipation) */
+    /* 2 — envelope lifts gently */
     tl.to(wrap, {
       y: -12, duration: 0.4, ease: 'power2.out'
     }, '+=0.05');
 
-    /* 3 ── flap unfolds smoothly */
+    /* 3 — flap unfolds */
     tl.add(() => flap.classList.add('open'));
 
-    /* 4 ── brief pause so flap animation is visible, then letter peeks */
+    /* 4 — letter peeks out */
     tl.add(() => peek.classList.add('peeking'), '+=0.7');
 
-    /* 5 ── envelope drifts up gracefully */
+    /* 5 — envelope drifts up */
     tl.to(wrap, {
       y: -380,
       scale: 0.72,
@@ -429,7 +429,7 @@
       duration: 0.9, ease: 'power2.inOut'
     }, '<+0.1');
 
-    /* 6 ── letter lands softly */
+    /* 6 — letter appears */
     tl.add(() => {
       outer.classList.add('visible');
       requestAnimationFrame(() => requestAnimationFrame(() => {
@@ -437,7 +437,7 @@
       }));
     }, '-=0.45');
 
-    /* 7 ── start typewriting */
+    /* 7 — start typewriting */
     tl.add(() => startTyping(), '+=0.65');
   }
 
@@ -450,15 +450,15 @@
 
   const queue = [];
 
-  function enqueue(el, text, speed, onDone) {
-    queue.push({ el, text, speed, onDone });
+  function enqueue(el, text, speed) {
+    if (!el || !text) return; // ← guard: skip if element or text is missing
+    queue.push({ el, text, speed });
   }
 
   function runQueue(idx) {
     if (idx >= queue.length) return;
-    const { el, text, speed, onDone } = queue[idx];
+    const { el, text, speed } = queue[idx];
     typeInto(el, text, speed, () => {
-      if (onDone) onDone();
       setTimeout(() => runQueue(idx + 1), PAUSE_BETWEEN);
     });
   }
@@ -486,14 +486,19 @@
 
   function startTyping() {
     const c = letterContent;
-    enqueue(document.getElementById('lDate'),     c.date,     SPEED_TYPEWRITER);
-    enqueue(document.getElementById('lGreeting'), c.greeting, SPEED_HANDWRITTEN);
+
+    enqueue(document.getElementById('lDate'),     c.date,      SPEED_TYPEWRITER);
+    enqueue(document.getElementById('lGreeting'), c.greeting,  SPEED_HANDWRITTEN);
+
     const pEls = ['lP1','lP2','lP3','lP4','lP5'];
     c.paragraphs.forEach((txt, i) => {
       if (pEls[i]) enqueue(document.getElementById(pEls[i]), txt, SPEED_TYPEWRITER);
     });
+
+    // ← both are now guarded — won't break if accidentally left undefined
     enqueue(document.getElementById('lClosing'), c.closing,   SPEED_HANDWRITTEN);
     enqueue(document.getElementById('lSig'),     c.signature, SPEED_HANDWRITTEN);
+
     runQueue(0);
   }
 </script>

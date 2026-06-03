@@ -12,9 +12,7 @@
       --cream: #f2e8d0;
       --sepia: #a0845c;
     }
-
     * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-
     html, body {
       width:100%; height:100dvh;
       background: var(--warm-dark);
@@ -24,7 +22,7 @@
       -webkit-font-smoothing:antialiased;
     }
 
-    /* ── CINEMATIC BACKGROUND ── */
+    /* ── BACKGROUND ── */
     #scene-bg {
       position:fixed; inset:0; z-index:0;
       background:
@@ -33,25 +31,11 @@
         radial-gradient(ellipse at 50% 50%, rgba(30,10,50,0.60) 0%, transparent 80%),
         #0a0608;
     }
-
-    /* Horizontal scan lines */
     #scanlines {
       position:fixed; inset:0; z-index:1; pointer-events:none;
-      background: repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 3px,
-        rgba(0,0,0,0.07) 3px,
-        rgba(0,0,0,0.07) 4px
-      );
+      background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.07) 3px, rgba(0,0,0,0.07) 4px);
     }
-
-    /* Film grain */
-    #grain {
-      position:fixed; inset:0; z-index:2; pointer-events:none; opacity:0.07;
-    }
-
-    /* Dust particles */
+    #grain { position:fixed; inset:0; z-index:2; pointer-events:none; opacity:0.07; }
     #dust { position:fixed; inset:0; z-index:3; pointer-events:none; overflow:hidden; }
     .particle {
       position:absolute; width:2px; height:2px;
@@ -80,7 +64,7 @@
     }
     .back-btn:active { transform:scale(0.95); }
 
-    /* ── FILM COUNTER (top right) ── */
+    /* ── FILM COUNTER ── */
     .film-counter {
       position:fixed;
       top:max(14px,env(safe-area-inset-top)); right:16px; z-index:50;
@@ -112,7 +96,6 @@
       position:absolute;
       left:50%; top:50%;
       transform:translate(-50%,-50%) rotate(var(--rot,0deg));
-      /* Bigger: fill more of the screen */
       width:min(88vw,340px);
       background:#e8dcc0;
       padding:10px 10px 52px;
@@ -124,27 +107,20 @@
       transform-origin:center center;
       will-change:transform, opacity;
       z-index:2;
-      /* Aged paper texture via CSS */
       background-image:
         radial-gradient(ellipse at 0% 0%, rgba(180,140,80,0.25) 0%, transparent 50%),
         radial-gradient(ellipse at 100% 100%, rgba(160,120,60,0.20) 0%, transparent 50%),
         radial-gradient(ellipse at 100% 0%, rgba(200,180,120,0.10) 0%, transparent 40%);
     }
-
-    /* Polaroid top edge sprocket holes decoration */
     .photo-card::before {
       content:'';
       position:absolute; top:0; left:0; right:0; height:6px;
-      background: repeating-linear-gradient(
-        90deg,
+      background: repeating-linear-gradient(90deg,
         transparent 0px, transparent 12px,
         rgba(0,0,0,0.08) 12px, rgba(0,0,0,0.08) 18px,
-        transparent 18px, transparent 30px
-      );
+        transparent 18px, transparent 30px);
       pointer-events:none;
     }
-
-    /* Corner aging */
     .photo-card::after {
       content:''; position:absolute; inset:0;
       background:
@@ -155,61 +131,45 @@
       pointer-events:none; z-index:4; border-radius:inherit;
     }
 
-    /* ── PHOTO FRAME (image area) ── */
+    /* ── PHOTO FRAME ── */
     .photo-frame {
       width:100%;
+      /* Dynamic height: portrait ~130%, landscape ~70%, default 100% */
       padding-top:100%;
       position:relative; overflow:hidden;
       background:#1a1008;
-      /* Film rebate border */
       outline:2px solid rgba(0,0,0,0.5);
       outline-offset:-2px;
     }
+    /* Allow image to set the aspect ratio */
+    .photo-frame.portrait  { padding-top:130%; }
+    .photo-frame.landscape { padding-top:70%;  }
+    .photo-frame.square    { padding-top:100%; }
 
     .photo-frame img {
       position:absolute; inset:0;
       width:100%; height:100%; object-fit:cover; display:block;
-      /* Cinematic color grade: teal shadows, warm mids */
-      filter:
-        sepia(0.30)
-        contrast(1.12)
-        brightness(0.88)
-        saturate(0.80)
-        hue-rotate(-5deg);
+      filter: sepia(0.30) contrast(1.12) brightness(0.88) saturate(0.80) hue-rotate(-5deg);
     }
-
-    /* Vignette */
     .photo-frame::after {
       content:''; position:absolute; inset:0;
-      background:radial-gradient(ellipse at center,
-        transparent 40%,
-        rgba(0,0,0,0.45) 75%,
-        rgba(0,0,0,0.75) 100%);
+      background:radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.45) 75%, rgba(0,0,0,0.75) 100%);
       pointer-events:none; z-index:2;
     }
-
-    /* Light leak top-left */
     .photo-frame::before {
       content:''; position:absolute;
       top:-10%; left:-5%; width:50%; height:45%;
-      background:radial-gradient(ellipse at 20% 10%,
-        rgba(255,180,60,0.12) 0%,
-        transparent 65%);
+      background:radial-gradient(ellipse at 20% 10%, rgba(255,180,60,0.12) 0%, transparent 65%);
       pointer-events:none; z-index:3;
     }
-
-    /* Cinematic color overlay on image */
     .photo-grade {
       position:absolute; inset:0; z-index:1; pointer-events:none;
-      /* Teal-shadow / warm-highlight grade */
       background:
         radial-gradient(ellipse at 0% 100%,   rgba(20,60,80,0.18)  0%, transparent 55%),
         radial-gradient(ellipse at 100% 100%, rgba(10,40,60,0.15)  0%, transparent 50%),
         radial-gradient(ellipse at 50% 0%,    rgba(120,80,20,0.10) 0%, transparent 50%);
       mix-blend-mode: multiply;
     }
-
-    /* Placeholder when image missing */
     .ph-wrap {
       position:absolute; inset:0;
       display:flex; align-items:center; justify-content:center;
@@ -217,40 +177,27 @@
       background: linear-gradient(135deg, #1a1008 0%, #0e0a06 100%);
     }
     .ph-wrap span { font-size:38px; opacity:0.15; }
-    .ph-wrap small {
-      font-size:9px; color:rgba(160,130,90,0.25);
-      letter-spacing:3px; text-transform:uppercase;
-    }
+    .ph-wrap small { font-size:9px; color:rgba(160,130,90,0.25); letter-spacing:3px; text-transform:uppercase; }
 
-    /* ── CAPTION AREA ── */
+    /* ── CAPTION ── */
     .card-caption {
-      padding-top:10px;
-      text-align:center;
-      position:relative; z-index:5;
+      padding-top:10px; text-align:center; position:relative; z-index:5;
     }
     .card-caption h2 {
-      font-family:'Dancing Script',cursive;
-      font-size:21px; font-weight:700;
-      color:#2a1e0e;
-      line-height:1.2;
-      text-shadow: 0 1px 0 rgba(255,255,255,0.3);
+      font-family:'Dancing Script',cursive; font-size:21px; font-weight:700;
+      color:#2a1e0e; line-height:1.2; text-shadow: 0 1px 0 rgba(255,255,255,0.3);
     }
     .card-caption p {
-      font-family:'Bebas Neue', sans-serif;
-      font-size:10px; color:#7a5a30;
+      font-family:'Bebas Neue', sans-serif; font-size:10px; color:#7a5a30;
       letter-spacing:3px; margin-top:4px; text-transform:uppercase;
     }
 
-    /* ── DATE STAMP (bottom-right of photo) ── */
+    /* ── DATE STAMP ── */
     .date-stamp {
-      position:absolute;
-      bottom:10px; right:10px; z-index:5;
-      font-family:'Bebas Neue', sans-serif;
-      font-size:13px; letter-spacing:2px;
+      position:absolute; bottom:10px; right:10px; z-index:5;
+      font-family:'Bebas Neue', sans-serif; font-size:13px; letter-spacing:2px;
       color:rgba(255,140,40,0.85);
-      text-shadow:
-        0 0 8px rgba(255,120,20,0.7),
-        0 0 20px rgba(255,100,10,0.4);
+      text-shadow: 0 0 8px rgba(255,120,20,0.7), 0 0 20px rgba(255,100,10,0.4);
       pointer-events:none;
     }
 
@@ -273,45 +220,50 @@
     .card-exit-left  { animation:cardExitLeft  0.46s cubic-bezier(0.4,0,0.8,0.6) forwards; }
     .card-exit-right { animation:cardExitRight 0.46s cubic-bezier(0.4,0,0.8,0.6) forwards; }
 
+    /* Slideshow crossfade */
+    @keyframes slideFadeIn {
+      0%   { opacity:0; transform:translate(-50%,-50%) scale(1.04); }
+      100% { opacity:1; transform:translate(-50%,-50%) scale(1); }
+    }
+    @keyframes slideFadeOut {
+      0%   { opacity:1; transform:translate(-50%,-50%) scale(1); }
+      100% { opacity:0; transform:translate(-50%,-50%) scale(0.96); }
+    }
+    .card-slide-in  { animation:slideFadeIn  0.8s ease forwards; }
+    .card-slide-out { animation:slideFadeOut 0.5s ease forwards; }
+
     /* ── SWIPE HINT ── */
     .swipe-hint {
       text-align:center; padding:5px 0 3px;
-      font-family:'Bebas Neue', sans-serif;
-      font-size:11px; color:rgba(160,130,60,0.28);
-      letter-spacing:4px; text-transform:uppercase;
+      font-family:'Bebas Neue', sans-serif; font-size:11px;
+      color:rgba(160,130,60,0.28); letter-spacing:4px; text-transform:uppercase;
       flex:0 0 auto;
+      transition: opacity 0.3s;
     }
 
-    /* ── FILM STRIP ── */
+    /* ── FILMSTRIP ── */
     .filmstrip-wrap {
       flex:0 0 auto; padding:6px 0 2px; position:relative;
     }
-    .filmstrip-wrap::before,
-    .filmstrip-wrap::after {
+    .filmstrip-wrap::before, .filmstrip-wrap::after {
       content:''; position:absolute; left:0; right:0; height:8px;
-      background: repeating-linear-gradient(
-        90deg,
+      background: repeating-linear-gradient(90deg,
         transparent 0px, transparent 8px,
         rgba(200,147,58,0.22) 8px, rgba(200,147,58,0.22) 14px,
-        transparent 14px, transparent 22px
-      );
+        transparent 14px, transparent 22px);
       pointer-events:none; z-index:2;
     }
     .filmstrip-wrap::before { top:0px; }
     .filmstrip-wrap::after  { bottom:0px; }
-
     .filmstrip {
       display:flex; gap:4px; padding:10px 16px;
       overflow-x:auto; overflow-y:hidden;
       -webkit-overflow-scrolling:touch; scrollbar-width:none;
-      background:#050305;
-      border-top:2px solid #1a1008; border-bottom:2px solid #1a1008;
+      background:#050305; border-top:2px solid #1a1008; border-bottom:2px solid #1a1008;
     }
     .filmstrip::-webkit-scrollbar { display:none; }
-
     .film-frame {
-      flex:0 0 54px; height:54px;
-      position:relative; cursor:pointer;
+      flex:0 0 54px; height:54px; position:relative; cursor:pointer;
       border:1.5px solid transparent; border-radius:1px;
       overflow:hidden; background:#0e0a06;
       transition:border-color 0.2s, transform 0.2s;
@@ -322,29 +274,17 @@
       filter:sepia(0.5) contrast(0.85) brightness(0.65) saturate(0.6);
       transition:filter 0.2s;
     }
-    .film-frame.active {
-      border-color:rgba(200,147,58,0.9);
-      transform:scale(1.1);
-      box-shadow: 0 0 10px rgba(200,147,58,0.35);
-    }
-    .film-frame.active img {
-      filter:sepia(0.2) contrast(1.05) brightness(0.90) saturate(0.85);
-    }
+    .film-frame.active { border-color:rgba(200,147,58,0.9); transform:scale(1.1); box-shadow: 0 0 10px rgba(200,147,58,0.35); }
+    .film-frame.active img { filter:sepia(0.2) contrast(1.05) brightness(0.90) saturate(0.85); }
     .film-frame:active { transform:scale(0.92) !important; }
     .film-frame::after {
-      content:attr(data-num);
-      position:absolute; bottom:2px; right:3px;
+      content:attr(data-num); position:absolute; bottom:2px; right:3px;
       font-size:8px; color:rgba(200,147,58,0.45);
-      font-family:'Bebas Neue',sans-serif; letter-spacing:1px;
-      pointer-events:none;
+      font-family:'Bebas Neue',sans-serif; letter-spacing:1px; pointer-events:none;
     }
-    .film-placeholder {
-      width:100%; height:100%;
-      display:flex; align-items:center; justify-content:center;
-      background:#0a0806; font-size:16px; opacity:0.18;
-    }
+    .film-placeholder { width:100%; height:100%; display:flex; align-items:center; justify-content:center; background:#0a0806; font-size:16px; opacity:0.18; }
 
-    /* ── NAVIGATION ARROWS ── */
+    /* ── NAV ARROWS ── */
     .nav-arrows {
       position:absolute; top:50%; left:0; right:0;
       display:flex; justify-content:space-between;
@@ -352,8 +292,7 @@
       transform:translateY(-50%);
     }
     .nav-arrow {
-      width:36px; height:36px;
-      border-radius:50%;
+      width:36px; height:36px; border-radius:50%;
       background:rgba(10,6,8,0.6);
       border:1px solid rgba(200,147,58,0.25);
       color:rgba(200,147,58,0.6);
@@ -363,22 +302,522 @@
       transition:background 0.2s, border-color 0.2s;
       -webkit-tap-highlight-color:transparent;
     }
-    .nav-arrow:active {
-      background:rgba(200,147,58,0.15);
-      border-color:rgba(200,147,58,0.6);
-      transform:scale(0.92);
+    .nav-arrow:active { background:rgba(200,147,58,0.15); border-color:rgba(200,147,58,0.6); transform:scale(0.92); }
+
+    /* ── PLAY BUTTON ── */
+    .play-btn-wrap {
+      position:absolute; bottom:16px; left:50%; transform:translateX(-50%);
+      z-index:20; pointer-events:all;
     }
+    .play-btn {
+      display:flex; align-items:center; gap:8px;
+      padding:10px 22px; border-radius:2px;
+      background:rgba(10,6,8,0.82);
+      border:1px solid rgba(200,147,58,0.55);
+      color:rgba(200,147,58,0.95);
+      font-family:'Bebas Neue', sans-serif; font-size:15px; letter-spacing:3px;
+      cursor:pointer; backdrop-filter:blur(8px);
+      transition:background 0.2s, border-color 0.2s, transform 0.15s;
+      -webkit-tap-highlight-color:transparent;
+    }
+    .play-btn:hover { background:rgba(200,147,58,0.12); border-color:rgba(200,147,58,0.9); }
+    .play-btn:active { transform:scale(0.94); }
+    .play-btn svg { width:16px; height:16px; fill:rgba(200,147,58,0.95); }
+
+    /* ── SLIDESHOW PROGRESS BAR ── */
+    .progress-bar-wrap {
+      position:fixed; top:0; left:0; right:0; height:3px; z-index:60;
+      background:rgba(200,147,58,0.1);
+      display:none;
+    }
+    .progress-bar {
+      height:100%; background:rgba(200,147,58,0.85);
+      width:0%; transition:none;
+      box-shadow:0 0 8px rgba(200,147,58,0.6);
+    }
+    .progress-bar-wrap.active { display:block; }
+
+    /* ── SPEED CONTROL ── */
+    .speed-control {
+      position:fixed; bottom:max(16px,env(safe-area-inset-bottom)); right:16px;
+      z-index:60; display:none; flex-direction:column; align-items:flex-end; gap:6px;
+    }
+    .speed-control.active { display:flex; }
+    .speed-label {
+      font-family:'Bebas Neue', sans-serif; font-size:10px;
+      color:rgba(200,147,58,0.4); letter-spacing:2px;
+    }
+    .speed-buttons { display:flex; gap:4px; }
+    .speed-btn {
+      padding:5px 10px; border-radius:2px;
+      background:rgba(10,6,8,0.7);
+      border:1px solid rgba(200,147,58,0.2);
+      color:rgba(200,147,58,0.5);
+      font-family:'Bebas Neue', sans-serif; font-size:12px; letter-spacing:1px;
+      cursor:pointer;
+      transition:all 0.15s;
+    }
+    .speed-btn.active { background:rgba(200,147,58,0.2); border-color:rgba(200,147,58,0.8); color:rgba(200,147,58,1); }
+
+    /* ────────────────────────────────────────────────
+       CINEMATIC PROJECTOR OVERLAY
+    ──────────────────────────────────────────────── */
+    #projector-overlay {
+      position:fixed; inset:0; z-index:200;
+      display:none;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      background:#000;
+    }
+    #projector-overlay.visible { display:flex; }
+
+    /* Curtains */
+    .curtain { position:absolute; top:0; bottom:0; width:50%; z-index:10; overflow:hidden; }
+    .curtain-left  { left:0; }
+    .curtain-right { right:0; }
+
+    .curtain-inner {
+      position:absolute; inset:0;
+      background:
+        repeating-linear-gradient(90deg,
+          rgba(80,20,0,0.85) 0px,  rgba(40,8,0,0.9) 18px,
+          rgba(100,25,0,0.8) 18px, rgba(60,12,0,0.85) 36px,
+          rgba(80,20,0,0.85) 36px, rgba(30,6,0,0.9) 54px
+        ),
+        linear-gradient(180deg, rgba(0,0,0,0.4) 0%, transparent 20%, transparent 80%, rgba(0,0,0,0.5) 100%);
+      background-size:54px 100%, 100% 100%;
+    }
+
+    /* Curtain fold shadow */
+    .curtain-inner::after {
+      content:''; position:absolute; top:0; bottom:0; width:16px;
+      background:rgba(0,0,0,0.35);
+    }
+    .curtain-left  .curtain-inner::after { right:0; }
+    .curtain-right .curtain-inner::after { left:0; }
+
+    /* Curtain top pelmet */
+    .curtain-top {
+      position:absolute; top:0; left:0; right:0; height:48px; z-index:11;
+      background:linear-gradient(180deg, rgba(60,12,0,0.95) 0%, rgba(40,8,0,0.85) 100%);
+      border-bottom:3px solid rgba(200,147,58,0.5);
+      box-shadow:0 4px 20px rgba(0,0,0,0.8);
+    }
+    .curtain-top::after {
+      content:'';
+      position:absolute; bottom:-1px; left:0; right:0; height:8px;
+      background: repeating-linear-gradient(90deg,
+        rgba(200,147,58,0.7) 0px,  rgba(200,147,58,0.7) 6px,
+        transparent 6px, transparent 14px);
+    }
+
+    /* Opening curtain animations */
+    @keyframes curtainOpenLeft {
+      0%   { transform:translateX(0); }
+      100% { transform:translateX(-100%); }
+    }
+    @keyframes curtainOpenRight {
+      0%   { transform:translateX(0); }
+      100% { transform:translateX(100%); }
+    }
+    @keyframes curtainCloseLeft  { 0%{transform:translateX(-100%);} 100%{transform:translateX(0);} }
+    @keyframes curtainCloseRight { 0%{transform:translateX(100%);}  100%{transform:translateX(0);} }
+
+    .curtain-left.opening   { animation:curtainOpenLeft  1.4s cubic-bezier(0.4,0,0.2,1) forwards; }
+    .curtain-right.opening  { animation:curtainOpenRight 1.4s cubic-bezier(0.4,0,0.2,1) forwards; }
+    .curtain-left.closing   { animation:curtainCloseLeft  0.9s cubic-bezier(0.4,0,0.2,1) forwards; }
+    .curtain-right.closing  { animation:curtainCloseRight 0.9s cubic-bezier(0.4,0,0.2,1) forwards; }
+
+    /* Film leader strip */
+    #film-leader {
+      position:absolute; inset:0; z-index:5;
+      background:#f5e6c8;
+      display:flex; align-items:center; justify-content:center;
+      opacity:0; pointer-events:none;
+      flex-direction:column; gap:4px;
+    }
+    #film-leader .leader-content {
+      display:flex; flex-direction:column; align-items:center; gap:8px;
+    }
+    #film-leader .leader-num {
+      font-family:'Bebas Neue', sans-serif; font-size:clamp(80px,25vw,180px);
+      color:#1a0a00; line-height:0.85;
+      text-shadow: 2px 2px 0 rgba(0,0,0,0.3);
+    }
+    #film-leader .leader-circle {
+      width:clamp(60px,18vw,120px); height:clamp(60px,18vw,120px);
+      border-radius:50%; border:clamp(4px,1.5vw,8px) solid #1a0a00;
+      position:relative; overflow:hidden;
+    }
+    #film-leader .leader-circle::before {
+      content:''; position:absolute; inset:8px;
+      border-radius:50%; border:2px solid rgba(26,10,0,0.3);
+    }
+    #film-leader .leader-circle::after {
+      content:''; position:absolute;
+      top:50%; left:50%; width:8px; height:100%;
+      background:#1a0a00; transform:translate(-50%,-50%);
+    }
+    #film-leader .leader-bar {
+      width:clamp(40px,12vw,80px); height:clamp(4px,1.2vw,6px);
+      background:#1a0a00;
+    }
+    #film-leader .leader-text {
+      font-family:'Bebas Neue', sans-serif; font-size:clamp(8px,2.5vw,14px);
+      color:#1a0a00; letter-spacing:4px; margin-top:4px;
+    }
+
+    /* Sprocket holes on leader */
+    #film-leader::before, #film-leader::after {
+      content:''; position:absolute; top:0; bottom:0; width:clamp(16px,5vw,28px);
+      background: repeating-linear-gradient(0deg,
+        transparent 0px, transparent 8px,
+        rgba(180,140,80,0.4) 8px, rgba(180,140,80,0.4) 12px,
+        transparent 12px, transparent 20px
+      ),
+      rgba(140,100,50,0.3);
+      pointer-events:none;
+    }
+    #film-leader::before { left:0; }
+    #film-leader::after  { right:0; }
+
+    @keyframes leaderFlash {
+      0%  {background:#f5e6c8;}
+      15% {background:#fff;}
+      30% {background:#e8d4a8;}
+      45% {background:#fff9e0;}
+      55% {background:#f5e6c8;}
+      100%{background:#f5e6c8;}
+    }
+    @keyframes leaderShow { 0%{opacity:0;} 5%{opacity:1;} 80%{opacity:1;} 100%{opacity:0;} }
+    #film-leader.playing { animation:leaderShow 2.5s ease forwards; }
+    #film-leader.playing .leader-content { animation:leaderFlash 0.6s steps(1) 0.2s 3; }
+
+    /* Projector screen */
+    #proj-screen {
+      position:absolute; inset:0; z-index:4;
+      display:flex; align-items:center; justify-content:center;
+      overflow:hidden;
+      background:#000;
+    }
+
+    #proj-img {
+      max-width:100%; max-height:100%;
+      width:auto; height:auto;
+      object-fit:contain;
+      display:block;
+      /* Cinematic grade */
+      filter:sepia(0.25) contrast(1.15) brightness(0.9) saturate(0.75);
+      transition:opacity 0s;
+      opacity:1;
+    }
+
+    /* Projector scan line overlay on screen */
+    #proj-screen::after {
+      content:''; position:absolute; inset:0; z-index:2; pointer-events:none;
+      background: repeating-linear-gradient(0deg,
+        transparent, transparent 3px,
+        rgba(0,0,0,0.08) 3px, rgba(0,0,0,0.08) 4px);
+      mix-blend-mode:multiply;
+    }
+
+    /* Vignette on proj screen */
+    #proj-screen::before {
+      content:''; position:absolute; inset:0; z-index:3; pointer-events:none;
+      background:radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.7) 100%);
+    }
+
+    /* Film flicker */
+    @keyframes projFlicker {
+      0%,100%{ opacity:1; }
+      92%    { opacity:1; }
+      93%    { opacity:0.85; }
+      94%    { opacity:1; }
+      97%    { opacity:0.92; }
+      98%    { opacity:1; }
+    }
+    #proj-img.flickering { animation:projFlicker 3.5s ease infinite; }
+
+    /* Image transition in projector */
+    @keyframes projImgIn  { from{opacity:0;} to{opacity:1;} }
+    @keyframes projImgOut { from{opacity:1;} to{opacity:0;} }
+    .proj-fade-in  { animation:projImgIn  0.6s ease forwards; }
+    .proj-fade-out { animation:projImgOut 0.4s ease forwards; }
+
+    /* Projector controls */
+    #proj-controls {
+      position:absolute; bottom:max(24px,env(safe-area-inset-bottom)); left:50%;
+      transform:translateX(-50%); z-index:15;
+      display:flex; align-items:center; gap:10px;
+      background:rgba(0,0,0,0.72); backdrop-filter:blur(10px);
+      border:1px solid rgba(200,147,58,0.35);
+      border-radius:4px; padding:10px 18px;
+      transition:opacity 0.4s;
+    }
+    #proj-controls.fade { opacity:0; pointer-events:none; }
+
+    .pctrl-btn {
+      width:38px; height:38px; border-radius:50%;
+      background:rgba(200,147,58,0.12);
+      border:1px solid rgba(200,147,58,0.4);
+      color:rgba(200,147,58,0.9);
+      display:flex; align-items:center; justify-content:center;
+      cursor:pointer; transition:all 0.15s;
+      flex-shrink:0;
+    }
+    .pctrl-btn:hover { background:rgba(200,147,58,0.25); border-color:rgba(200,147,58,0.8); }
+    .pctrl-btn:active { transform:scale(0.88); }
+    .pctrl-btn svg { width:18px; height:18px; fill:rgba(200,147,58,0.9); pointer-events:none; }
+    .pctrl-btn.large { width:48px; height:48px; }
+    .pctrl-btn.large svg { width:22px; height:22px; }
+
+    .pctrl-sep { width:1px; height:28px; background:rgba(200,147,58,0.2); }
+
+    .pctrl-speed {
+      display:flex; gap:4px;
+    }
+    .pctrl-speed-btn {
+      padding:4px 8px; border-radius:2px;
+      background:transparent; border:1px solid rgba(200,147,58,0.2);
+      color:rgba(200,147,58,0.45); font-family:'Bebas Neue',sans-serif;
+      font-size:11px; letter-spacing:1px; cursor:pointer;
+      transition:all 0.15s;
+    }
+    .pctrl-speed-btn.on { background:rgba(200,147,58,0.2); border-color:rgba(200,147,58,0.7); color:rgba(200,147,58,1); }
+
+    /* Close projector button */
+    #proj-close {
+      position:absolute; top:max(14px,env(safe-area-inset-top)); right:16px; z-index:15;
+      background:rgba(0,0,0,0.7); border:1px solid rgba(200,147,58,0.35);
+      color:rgba(200,147,58,0.8); font-family:'Special Elite',serif; font-size:12px;
+      padding:8px 16px; border-radius:2px; cursor:pointer; letter-spacing:2px;
+      backdrop-filter:blur(6px);
+    }
+    #proj-close:active { transform:scale(0.95); }
+
+    /* Projector counter */
+    #proj-counter {
+      position:absolute; top:max(14px,env(safe-area-inset-top)); left:16px; z-index:15;
+      font-family:'Bebas Neue', sans-serif; font-size:20px; letter-spacing:3px;
+      color:rgba(200,147,58,0.45);
+    }
+
+    /* Caption in projector */
+    #proj-caption {
+      position:absolute; bottom:max(90px,calc(80px + env(safe-area-inset-bottom)));
+      left:50%; transform:translateX(-50%); z-index:15;
+      text-align:center; pointer-events:none;
+      opacity:0; transition:opacity 0.5s;
+      width:90%;
+    }
+    #proj-caption.show { opacity:1; }
+    #proj-caption h3 {
+      font-family:'Dancing Script', cursive; font-size:clamp(18px,5vw,28px); font-weight:700;
+      color:rgba(242,232,208,0.9);
+      text-shadow:0 2px 16px rgba(0,0,0,0.9), 0 0 40px rgba(200,147,58,0.3);
+    }
+    #proj-caption p {
+      font-family:'Bebas Neue', sans-serif; font-size:11px;
+      color:rgba(200,147,58,0.7); letter-spacing:3px; margin-top:4px;
+    }
+
+    /* Progress in projector */
+    #proj-progress-wrap {
+      position:absolute; top:0; left:0; right:0; height:3px; z-index:15;
+      background:rgba(200,147,58,0.1);
+    }
+    #proj-progress {
+      height:100%; background:rgba(200,147,58,0.75);
+      width:0%; box-shadow:0 0 8px rgba(200,147,58,0.5);
+      transition:width linear;
+    }
+
+    /* Projector screen touch zones */
+    #proj-tap-prev, #proj-tap-next {
+      position:absolute; top:0; bottom:0; width:35%; z-index:8; cursor:pointer;
+    }
+    #proj-tap-prev { left:0; }
+    #proj-tap-next { right:0; }
+
+    /* ── OPENING TITLE CARD ── */
+    #title-card {
+      position:fixed; inset:0; z-index:300;
+      background:#000;
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      gap:16px;
+      animation: titleFadeOut 1s ease 3.2s forwards;
+    }
+    #title-card.gone { display:none; }
+    @keyframes titleFadeOut { to { opacity:0; pointer-events:none; } }
+
+    .title-line1 {
+      font-family:'Bebas Neue',sans-serif; font-size:clamp(11px,3vw,14px);
+      letter-spacing:8px; color:rgba(200,147,58,0.5);
+      animation: titleReveal 0.8s ease 0.4s both;
+    }
+    .title-line2 {
+      font-family:'Dancing Script',cursive; font-size:clamp(44px,14vw,80px); font-weight:700;
+      color:rgba(242,232,208,0.95); line-height:1;
+      text-shadow: 0 0 60px rgba(200,147,58,0.4), 0 0 120px rgba(200,147,58,0.15);
+      animation: titleReveal 1s ease 0.7s both;
+    }
+    .title-line3 {
+      font-family:'Special Elite',serif; font-size:clamp(10px,2.5vw,13px);
+      color:rgba(160,130,80,0.45); letter-spacing:5px; text-transform:uppercase;
+      animation: titleReveal 0.8s ease 1.2s both;
+    }
+    .title-rule {
+      width:80px; height:1px; background:rgba(200,147,58,0.35);
+      animation: titleReveal 0.8s ease 1s both;
+    }
+    @keyframes titleReveal { from{opacity:0; transform:translateY(14px);} to{opacity:1;transform:translateY(0);} }
+
+    /* ── BOKEH LIGHTS ── */
+    #bokeh { position:fixed; inset:0; z-index:4; pointer-events:none; overflow:hidden; }
+    .bokeh-dot {
+      position:absolute; border-radius:50%;
+      animation: bokehFloat ease-in-out infinite;
+      opacity:0;
+    }
+    @keyframes bokehFloat {
+      0%   { opacity:0; transform:translateY(0) scale(1); }
+      20%  { opacity:var(--bk-op); }
+      80%  { opacity:var(--bk-op); }
+      100% { opacity:0; transform:translateY(-60px) scale(1.3); }
+    }
+
+    /* ── PROJECTOR LIGHT BEAM ── */
+    #proj-beam {
+      position:absolute; top:0; left:50%; transform:translateX(-50%);
+      width:0; height:0;
+      border-left:  clamp(80px,22vw,180px) solid transparent;
+      border-right: clamp(80px,22vw,180px) solid transparent;
+      border-top:   clamp(180px,45vh,420px) solid rgba(255,220,120,0.04);
+      z-index:3; pointer-events:none;
+      animation:beamPulse 4s ease-in-out infinite;
+    }
+    @keyframes beamPulse {
+      0%,100%{ opacity:0.6; }
+      50%    { opacity:1; }
+    }
+
+    /* ── FILM SCRATCH LINES ── */
+    #film-scratches {
+      position:absolute; inset:0; z-index:6; pointer-events:none;
+      overflow:hidden;
+    }
+    .scratch {
+      position:absolute; top:0; bottom:0; width:1px;
+      background:linear-gradient(180deg,
+        transparent 0%, rgba(255,240,180,0.6) 20%,
+        transparent 40%, rgba(255,240,180,0.4) 60%,
+        transparent 80%, rgba(255,240,180,0.5) 100%);
+      opacity:0;
+      animation: scratchAnim linear infinite;
+    }
+    @keyframes scratchAnim {
+      0%  { opacity:0; transform:translateX(0) scaleY(0.3) translateY(-20%); }
+      2%  { opacity:1; }
+      8%  { opacity:0; }
+      100%{ opacity:0; transform:translateX(2px) scaleY(1) translateY(10%); }
+    }
+
+    /* ── HEARTBEAT FLASH on transition ── */
+    #flash-overlay {
+      position:fixed; inset:0; z-index:250; pointer-events:none;
+      background:rgba(255,220,150,0.0);
+      transition:background 0.08s;
+    }
+    #flash-overlay.flash { background:rgba(255,220,150,0.18); }
+
+    /* ── KEN BURNS on proj image ── */
+    @keyframes kenBurns1 { 0%{transform:scale(1.0) translate(0,0);}    100%{transform:scale(1.08) translate(-1%,-1%);} }
+    @keyframes kenBurns2 { 0%{transform:scale(1.08) translate(-1%,0);} 100%{transform:scale(1.0)  translate(1%, 1%);} }
+    @keyframes kenBurns3 { 0%{transform:scale(1.0)  translate(1%,0);}  100%{transform:scale(1.07) translate(-1%,1%);} }
+    .kb1 { animation:kenBurns1 var(--kb-dur,6s) ease-in-out forwards; }
+    .kb2 { animation:kenBurns2 var(--kb-dur,6s) ease-in-out forwards; }
+    .kb3 { animation:kenBurns3 var(--kb-dur,6s) ease-in-out forwards; }
+
+    /* ── EMOTIONAL QUOTE OVERLAY ── */
+    #quote-overlay {
+      position:absolute; inset:0; z-index:7; pointer-events:none;
+      display:flex; align-items:flex-end; justify-content:center;
+      padding-bottom:clamp(100px,18vh,160px);
+      opacity:0; transition:opacity 1.2s ease;
+    }
+    #quote-overlay.show { opacity:1; }
+    .quote-text {
+      font-family:'Dancing Script',cursive; font-size:clamp(14px,4vw,20px);
+      color:rgba(242,232,208,0.75);
+      text-shadow:0 2px 20px rgba(0,0,0,1), 0 0 60px rgba(200,147,58,0.2);
+      text-align:center; max-width:80%;
+      font-style:italic;
+    }
+
+    /* ── VIGNETTE PULSE (breathing) ── */
+    #vig-pulse {
+      position:absolute; inset:0; z-index:5; pointer-events:none;
+      background:radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.55) 100%);
+      animation:vigBreathe 4s ease-in-out infinite;
+    }
+    @keyframes vigBreathe {
+      0%,100%{ opacity:1; }
+      50%    { opacity:0.7; }
+    }
+
+    /* ── DUST MOTES in projector ── */
+    #proj-dust { position:absolute; inset:0; z-index:6; pointer-events:none; overflow:hidden; }
+    .proj-mote {
+      position:absolute; border-radius:50%;
+      background:rgba(255,230,150,0.7);
+      animation:moteDrift linear infinite;
+    }
+    @keyframes moteDrift {
+      0%  { transform:translate(0,0) rotate(0deg); opacity:0; }
+      10% { opacity:var(--m-op); }
+      90% { opacity:var(--m-op); }
+      100%{ transform:translate(var(--m-dx),var(--m-dy)) rotate(360deg); opacity:0; }
+    }
+
+    /* ── TAPE REEL decorative in leader ── */
+    @keyframes reelSpin { from{transform:rotate(0deg);} to{transform:rotate(360deg);} }
+    #leader-reel {
+      width:clamp(50px,15vw,90px); height:clamp(50px,15vw,90px);
+      position:relative;
+    }
+    #leader-reel svg { width:100%; height:100%; animation:reelSpin 1.2s linear infinite; }
   </style>
 </head>
 <body>
 
+
+<!-- Opening title card -->
+<div id="title-card">
+  <div class="title-line1">A GIFT FOR YOU</div>
+  <div class="title-rule"></div>
+  <div class="title-line2">Memories</div>
+  <div class="title-rule"></div>
+  <div class="title-line3">Class of 2026</div>
+</div>
+
+<!-- Flash overlay -->
+<div id="flash-overlay"></div>
+
+<!-- Bokeh lights -->
+<div id="bokeh"></div>
 <div id="scene-bg"></div>
 <div id="scanlines"></div>
 <canvas id="grain"></canvas>
 <div id="dust"></div>
 
 <button class="back-btn" onclick="goBack()">← Back</button>
-<div class="film-counter" id="filmCounter">01 / 06</div>
+<div class="film-counter" id="filmCounter">01 / 48</div>
+
+<!-- Progress bar (slideshow mode) -->
+<div class="progress-bar-wrap" id="progressWrap">
+  <div class="progress-bar" id="progressBar"></div>
+</div>
 
 <div class="viewer">
   <div class="stage" id="stage">
@@ -386,53 +825,194 @@
       <button class="nav-arrow" id="prevBtn">&#8592;</button>
       <button class="nav-arrow" id="nextBtn">&#8594;</button>
     </div>
+    <div class="play-btn-wrap">
+      <button class="play-btn" id="playBtn" onclick="openProjector()">
+        <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        PLAY 
+      </button>
+    </div>
   </div>
-  <div class="swipe-hint">&#8592; &nbsp; swipe to remember &nbsp; &#8594;</div>
+  <div class="swipe-hint" id="swipeHint">&#8592; &nbsp; swipe to remember &nbsp; &#8594;</div>
   <div class="filmstrip-wrap">
     <div class="filmstrip" id="filmstrip"></div>
   </div>
 </div>
 
+<!-- ══════════════════════════════════════════
+     CINEMATIC PROJECTOR OVERLAY
+══════════════════════════════════════════ -->
+<div id="projector-overlay">
+
+  <div id="proj-progress-wrap"><div id="proj-progress"></div></div>
+
+  <!-- Curtains -->
+  <div class="curtain curtain-left"  id="curtainLeft">
+    <div class="curtain-inner"></div>
+  </div>
+  <div class="curtain curtain-right" id="curtainRight">
+    <div class="curtain-inner"></div>
+  </div>
+  <div class="curtain-top"></div>
+
+  <!-- Film leader -->
+  <div id="film-leader">
+    <div class="leader-content">
+      <div class="leader-bar"></div>
+      <div class="leader-circle"></div>
+      <div class="leader-num" id="leaderNum">3</div>
+      <div class="leader-text">MEMORIES</div>
+      <div class="leader-bar"></div>
+    </div>
+  </div>
+
+  <!-- Screen -->
+
+    <div id="proj-beam"></div>
+    <div id="vig-pulse"></div>
+    <div id="film-scratches"></div>
+    <div id="proj-dust"></div>
+    <div id="quote-overlay"><div class="quote-text" id="quote-text"></div></div>
+  <div id="proj-screen">
+    <div id="proj-tap-prev"></div>
+    <div id="proj-tap-next"></div>
+    <img id="proj-img" src="" alt="">
+  </div>
+
+  <!-- Caption -->
+  <div id="proj-caption"><h3 id="proj-cap-text"></h3><p id="proj-cap-date"></p></div>
+
+  <!-- Counter -->
+  <div id="proj-counter">01 / 48</div>
+
+  <!-- Close -->
+  <button id="proj-close" onclick="closeProjector()">✕ CLOSE</button>
+
+  <!-- Controls -->
+  <div id="proj-controls">
+    <button class="pctrl-btn" id="pc-prev" title="Previous">
+      <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+    </button>
+    <button class="pctrl-btn large" id="pc-play" title="Play/Pause">
+      <svg viewBox="0 0 24 24" id="pc-play-icon"><path d="M8 5v14l11-7z"/></svg>
+    </button>
+    <button class="pctrl-btn" id="pc-next" title="Next">
+      <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+    </button>
+    <div class="pctrl-sep"></div>
+    <div class="pctrl-speed">
+      <button class="pctrl-speed-btn" data-spd="3000">SLOW</button>
+      <button class="pctrl-speed-btn on" data-spd="2000">MED</button>
+      <button class="pctrl-speed-btn" data-spd="1000">FAST</button>
+    </div>
+  </div>
+</div>
+
 <script>
+  /* ── UTILS ── */
   function goBack() {
     if (window.parent && window.parent !== window) window.parent.postMessage('close-gift','*');
     else window.history.back();
   }
+  function pad(n){ return String(n).padStart(2,'0'); }
 
-  /* ============================================================
-     📸 YOUR PHOTOS — update src, caption, date
-  ============================================================ */
-  const photos = [
-    { src:'../assets/images/photo-1.jpg', caption:'Best memories',   date:'CLASS OF 2026' },
-    { src:'../assets/images/photo-2.jpg', caption:'Together always', date:'ALWAYS & FOREVER' },
-    { src:'../assets/images/photo-3.jpg', caption:'You made it!',    date:'GRADUATION DAY' },
-    { src:'../assets/images/photo-4.jpg', caption:'So proud of you', date:'JUNE 2026' },
-    { src:'../assets/images/photo-5.jpg', caption:'Unforgettable',   date:'YOUR STORY' },
-    { src:'../assets/images/photo-6.jpg', caption:'Dream big',       date:'THE FUTURE AWAITS' },
-  ];
+  /* ══════════════════════════════════════════
+     PHOTO DATA — exact extensions per file
+  ══════════════════════════════════════════ */
+  const captions = [
+	  'A memory',
+	  'A moment',
+	  'Captured',
+	  'Remember this',
+	  'Good times',
+	  'Worth keeping',
+	  'A special day',
+	  'One for the books',
+	  'Looking back',
+	  'A snapshot',
+	  'Memories made',
+	  'Unforgettable',
+	  'A little moment',
+	  'Just like yesterday',
+	  'Another memory',
+	  'The story continues'
+	];
+  const dates = [
+	 
+	  'MEMORY CAPTURED',
+	  'LOOKING BACK',
+	  'SPECIAL MOMENT',
+	  'ON THIS DAY',
+	  'REMEMBER THIS',
+	  'GOOD TIMES',
+	  'CAPTURED IN TIME',
+	  'A MEMORY',
+	  'TREASURED',
+	  'UNFORGETTABLE',
+	  'THE JOURNEY',
+	  'MILESTONE',
+	  'MEMORIES MADE',
+	  'FOREVER KEPT',
+	  'A MOMENT'
+	  'CLASS OF 2026',
+	];
 
-  /* Slight different rotations for each card */
-  const rots = [0, 0, 0, 0, 0, 0, 0, 0];
+  // jpeg: 10,13,14,15,46,47,48 | png: 11 | rest: jpg
+  function getExt(n) {
+    if ([10,13,14,15,46,47,48].includes(n)) return 'jpeg';
+    if (n === 11) return 'png';
+    return 'jpg';
+  }
 
+  const photos = [];
+  for (let i = 1; i <= 48; i++) {
+    const ci = (i - 1) % captions.length;
+    photos.push({
+      src:     `../assets/images/${i}.${getExt(i)}`,
+      num:     i,
+      caption: captions[ci],
+      date:    dates[ci],
+    });
+  }
+
+  const rots = [0,0,0,0,0,0,0,0];
+
+  /* ══════════════════════════════════════════
+     MAIN VIEWER STATE
+  ══════════════════════════════════════════ */
   let current = 0;
   let busy    = false;
-  const stage = document.getElementById('stage');
-  const filmstrip = document.getElementById('filmstrip');
-  const filmCounter = document.getElementById('filmCounter');
+  const stage      = document.getElementById('stage');
+  const filmstrip  = document.getElementById('filmstrip');
+  const filmCounter= document.getElementById('filmCounter');
 
-  function pad(n){ return String(n).padStart(2,'0'); }
-  function updateCounter(){ filmCounter.textContent = pad(current+1) + ' / ' + pad(photos.length); }
+  function updateCounter(){ filmCounter.textContent = pad(current+1)+' / '+pad(photos.length); }
 
-  /* Build a polaroid card */
+  /* Detect image orientation */
+  function detectOrientation(img, frame) {
+    if (!img.naturalWidth || !img.naturalHeight) return;
+    const ratio = img.naturalWidth / img.naturalHeight;
+    frame.classList.remove('portrait','landscape','square');
+    if      (ratio < 0.85)  frame.classList.add('portrait');
+    else if (ratio > 1.15)  frame.classList.add('landscape');
+    else                    frame.classList.add('square');
+  }
+
+  /* Flash overlay */
+  const flashEl = document.getElementById('flash-overlay');
+  function doFlash() {
+    flashEl.classList.add('flash');
+    setTimeout(() => flashEl.classList.remove('flash'), 120);
+  }
+
+  /* Build polaroid card */
   function makeCard(idx) {
     const p   = photos[idx];
     const rot = rots[idx % rots.length];
     const card = document.createElement('div');
     card.className = 'photo-card';
     card.style.setProperty('--rot', rot + 'deg');
-
     card.innerHTML = `
-      <div class="photo-frame">
+      <div class="photo-frame" id="frame-${idx}">
         <div class="ph-wrap"><span>📷</span><small>photo ${idx+1}</small></div>
         <div class="photo-grade"></div>
         <img src="" alt="${p.caption}" style="display:none">
@@ -443,14 +1023,16 @@
         <p>${p.date}</p>
       </div>
     `;
-
-    const img = card.querySelector('img');
-    const ph  = card.querySelector('.ph-wrap');
-    const tmp = new Image();
-    tmp.onload  = () => { img.src = p.src; img.style.display='block'; ph.style.display='none'; };
+    const img   = card.querySelector('img');
+    const ph    = card.querySelector('.ph-wrap');
+    const frame = card.querySelector('.photo-frame');
+    const tmp   = new Image();
+    tmp.onload  = () => {
+      img.src = p.src; img.style.display='block'; ph.style.display='none';
+      detectOrientation(tmp, frame);
+    };
     tmp.onerror = () => {};
     tmp.src = p.src;
-
     return card;
   }
 
@@ -459,7 +1041,7 @@
   stage.appendChild(activeCard);
   updateCounter();
 
-  /* Filmstrip highlight sync */
+  /* Filmstrip sync */
   function updateStrip() {
     document.querySelectorAll('.film-frame').forEach((f,i) =>
       f.classList.toggle('active', i === current)
@@ -469,38 +1051,33 @@
     updateCounter();
   }
 
-  /* Transition */
-  function navigate(dir) {
-    if (busy) return;
+  /* Navigate */
+  function navigate(dir, slideMode) {
+    if (busy) return false;
     const next = current + dir;
     if (next < 0 || next >= photos.length) {
-      const rot = rots[current % rots.length];
-      activeCard.style.transition = 'transform 0.18s cubic-bezier(0.22,1,0.36,1)';
-      activeCard.style.transform  = `translate(-50%,-50%) rotate(${rot}deg) translateX(${dir*16}px)`;
-      setTimeout(() => {
-        activeCard.style.transform = `translate(-50%,-50%) rotate(${rot}deg)`;
-        setTimeout(() => { activeCard.style.transition = ''; }, 220);
-      }, 150);
-      return;
+      if (!slideMode) {
+        const rot = rots[current % rots.length];
+        activeCard.style.transition = 'transform 0.18s cubic-bezier(0.22,1,0.36,1)';
+        activeCard.style.transform  = `translate(-50%,-50%) rotate(${rot}deg) translateX(${dir*16}px)`;
+        setTimeout(() => {
+          activeCard.style.transform = `translate(-50%,-50%) rotate(${rot}deg)`;
+          setTimeout(() => { activeCard.style.transition = ''; }, 220);
+        }, 150);
+      }
+      return false;
     }
-
-    busy = true;
+    busy    = true;
     current = next;
-
+    doFlash();
     const incoming = makeCard(next);
     incoming.style.opacity = '0';
     incoming.style.zIndex  = '1';
     stage.appendChild(incoming);
-
     const exitCls = dir === 1 ? 'card-exit-left' : 'card-exit-right';
     activeCard.style.zIndex = '3';
     activeCard.classList.add(exitCls);
-
-    setTimeout(() => {
-      incoming.style.zIndex = '2';
-      incoming.classList.add('card-entering');
-    }, 85);
-
+    setTimeout(() => { incoming.style.zIndex='2'; incoming.classList.add('card-entering'); }, 85);
     setTimeout(() => {
       activeCard.remove();
       incoming.classList.remove('card-entering');
@@ -511,23 +1088,24 @@
       busy       = false;
       updateStrip();
     }, 760);
+    return true;
   }
 
-  /* Arrow buttons */
   document.getElementById('prevBtn').addEventListener('click', () => navigate(-1));
   document.getElementById('nextBtn').addEventListener('click', () => navigate(1));
 
-  /* Filmstrip clicks */
+  /* Filmstrip build */
   photos.forEach((p, i) => {
     const div = document.createElement('div');
     div.className = 'film-frame' + (i === 0 ? ' active' : '');
     div.setAttribute('data-num', pad(i+1));
     const img = document.createElement('img');
-    img.src = p.src; img.alt = p.caption;
+    img.alt = p.caption;
+    img.src = p.src;
     img.onerror = () => {
-      img.style.display = 'none';
+      img.style.display='none';
       const ph = document.createElement('div');
-      ph.className = 'film-placeholder'; ph.innerHTML = '📷';
+      ph.className='film-placeholder'; ph.innerHTML='📷';
       div.appendChild(ph);
     };
     div.appendChild(img);
@@ -543,46 +1121,445 @@
     filmstrip.appendChild(div);
   });
 
-  /* Touch swipe with drag follow */
+  /* Touch swipe */
   let tx = 0, dragging = false;
   stage.addEventListener('touchstart', e => {
-    if (busy) return;
-    tx = e.touches[0].clientX; dragging = true;
+    if (busy) return; tx = e.touches[0].clientX; dragging = true;
     activeCard.style.transition = 'none';
-  }, { passive:true });
-
+  }, {passive:true});
   stage.addEventListener('touchmove', e => {
     if (!dragging || busy) return;
-    const dx = e.touches[0].clientX - tx;
+    const dx  = e.touches[0].clientX - tx;
     const rot = rots[current % rots.length];
-    activeCard.style.transform = `translate(calc(-50% + ${dx * 0.42}px), -50%) rotate(${rot + dx * 0.022}deg)`;
-  }, { passive:true });
-
+    activeCard.style.transform = `translate(calc(-50% + ${dx*0.42}px),-50%) rotate(${rot+dx*0.022}deg)`;
+  }, {passive:true});
   stage.addEventListener('touchend', e => {
     if (!dragging) return; dragging = false;
     const dx = e.changedTouches[0].clientX - tx;
-    const dy = e.changedTouches[0].clientY - tx;
-    if (Math.abs(dx) > 38) {
-      navigate(dx < 0 ? 1 : -1);
-    } else {
+    if (Math.abs(dx) > 38) navigate(dx < 0 ? 1 : -1);
+    else {
       const rot = rots[current % rots.length];
       activeCard.style.transition = 'transform 0.35s cubic-bezier(0.22,1,0.36,1)';
       activeCard.style.transform  = `translate(-50%,-50%) rotate(${rot}deg)`;
     }
-  }, { passive:true });
+  }, {passive:true});
 
-  /* Film grain canvas */
+  /* Desktop 3D tilt */
+  stage.addEventListener('mousemove', e => {
+    if (!activeCard || busy) return;
+    const r   = stage.getBoundingClientRect();
+    const dx  = (e.clientX - r.left - r.width/2)  / (r.width/2);
+    const dy  = (e.clientY - r.top  - r.height/2) / (r.height/2);
+    const rot = rots[current % rots.length];
+    activeCard.style.transition = 'transform 0.2s ease';
+    activeCard.style.transform  = `translate(-50%,-50%) rotate(${rot+dx*2}deg) rotateX(${-dy*4}deg) rotateY(${dx*4}deg)`;
+  });
+  stage.addEventListener('mouseleave', () => {
+    if (!activeCard || busy) return;
+    const rot = rots[current % rots.length];
+    activeCard.style.transition = 'transform 0.5s cubic-bezier(0.22,1,0.36,1)';
+    activeCard.style.transform  = `translate(-50%,-50%) rotate(${rot}deg)`;
+  });
+
+  /* ══════════════════════════════════════════
+     PROJECTOR ENGINE
+  ══════════════════════════════════════════ */
+  const overlay      = document.getElementById('projector-overlay');
+  const curtainLeft  = document.getElementById('curtainLeft');
+  const curtainRight = document.getElementById('curtainRight');
+  const filmLeader   = document.getElementById('film-leader');
+  const leaderNum    = document.getElementById('leaderNum');
+  const projImg      = document.getElementById('proj-img');
+  const projCapText  = document.getElementById('proj-cap-text');
+  const projCapDate  = document.getElementById('proj-cap-date');
+  const projCaption  = document.getElementById('proj-caption');
+  const projCounter  = document.getElementById('proj-counter');
+  const projProgress = document.getElementById('proj-progress');
+  const projControls = document.getElementById('proj-controls');
+  const pcPlayIcon   = document.getElementById('pc-play-icon');
+  const quoteEl      = document.getElementById('quote-text');
+  const quoteOvl     = document.getElementById('quote-overlay');
+
+  let projIndex    = 0;
+  let projPlaying  = false;
+  let projInterval = null;
+  let projSpeed    = 2000;
+  let ctrlFadeTimer= null;
+  let kbIdx        = 0;
+  let qIdx         = 0;
+
+  const iconPlay  = 'M8 5v14l11-7z';
+  const iconPause = 'M6 19h4V5H6v14zm8-14v14h4V5h-4z';
+
+  const quotes = [
+    "These moments are forever.",
+    "Time flies, but memories stay.",
+    "You made us so proud.",
+    "The best is yet to come.",
+    "Every picture tells a story.",
+    "Hold on to these days.",
+    "A chapter worth remembering.",
+    "You are loved beyond words.",
+    "Look how far you've come.",
+    "The world is yours now.",
+    "Cherish every single moment.",
+    "Forever in our hearts.",
+  ];
+
+  const kbClasses = ['kb1','kb2','kb3'];
+
+  function setProjPlayIcon(playing) {
+    pcPlayIcon.querySelector('path').setAttribute('d', playing ? iconPause : iconPlay);
+  }
+
+  function showControls() {
+    projControls.classList.remove('fade');
+    clearTimeout(ctrlFadeTimer);
+    if (projPlaying) ctrlFadeTimer = setTimeout(() => projControls.classList.add('fade'), 3000);
+  }
+
+  function applyKenBurns(dur) {
+    projImg.classList.remove('kb1','kb2','kb3');
+    void projImg.offsetWidth;
+    projImg.style.setProperty('--kb-dur', dur + 'ms');
+    projImg.classList.add(kbClasses[kbIdx % kbClasses.length]);
+    kbIdx++;
+  }
+
+  function showQuote() {
+    quoteOvl.classList.remove('show');
+    setTimeout(() => {
+      quoteEl.textContent = quotes[qIdx % quotes.length];
+      qIdx++;
+      quoteOvl.classList.add('show');
+    }, 600);
+  }
+
+  function hideQuote() { quoteOvl.classList.remove('show'); }
+
+  function loadProjImage(idx, onDone) {
+    const p   = photos[idx];
+    const tmp = new Image();
+    tmp.onload  = () => { projImg.src = tmp.src; if (onDone) onDone(); };
+    tmp.onerror = () => { projImg.src = '';      if (onDone) onDone(); };
+    tmp.src = p.src;
+  }
+
+  function updateProjUI(animate) {
+    const p = photos[projIndex];
+    projCounter.textContent = pad(projIndex+1)+' / '+pad(photos.length);
+    projCapText.textContent = p.caption;
+    projCapDate.textContent = p.date;
+    projCaption.classList.remove('show');
+    current = projIndex;
+    updateStrip();
+
+    if (animate) {
+      doFlash();
+      projImg.classList.add('proj-fade-out');
+      setTimeout(() => {
+        projImg.classList.remove('proj-fade-out','kb1','kb2','kb3');
+        loadProjImage(projIndex, () => {
+          projImg.classList.add('proj-fade-in');
+          applyKenBurns(projSpeed + 600);
+          setTimeout(() => {
+            projImg.classList.remove('proj-fade-in');
+            projImg.classList.add('flickering');
+            projCaption.classList.add('show');
+          }, 600);
+        });
+      }, 400);
+      if (projIndex % 4 === 0) showQuote(); else hideQuote();
+    } else {
+      loadProjImage(projIndex, () => {
+        projImg.classList.add('flickering');
+        projCaption.classList.add('show');
+      });
+    }
+  }
+
+  function startProgress() {
+    projProgress.style.transition = 'none';
+    projProgress.style.width = '0%';
+    void projProgress.offsetWidth;
+    projProgress.style.transition = `width ${projSpeed}ms linear`;
+    projProgress.style.width = '100%';
+  }
+  function stopProgress() {
+    projProgress.style.transition = 'none';
+    projProgress.style.width = '0%';
+  }
+
+  function projPlay() {
+    projPlaying = true;
+    setProjPlayIcon(true);
+    startProgress();
+    projInterval = setInterval(() => {
+      projIndex = (projIndex + 1) % photos.length;
+      updateProjUI(true);
+      startProgress();
+    }, projSpeed);
+    showControls();
+  }
+
+  function projPause() {
+    projPlaying = false;
+    setProjPlayIcon(false);
+    clearInterval(projInterval);
+    projInterval = null;
+    stopProgress();
+    showControls();
+  }
+
+  function projTogglePlay() {
+    if (projPlaying) projPause(); else projPlay();
+  }
+
+  function projGoNext() {
+    if (projPlaying) { clearInterval(projInterval); projInterval = null; }
+    projIndex = (projIndex + 1) % photos.length;
+    updateProjUI(true);
+    if (projPlaying) {
+      startProgress();
+      projInterval = setInterval(() => {
+        projIndex = (projIndex + 1) % photos.length;
+        updateProjUI(true); startProgress();
+      }, projSpeed);
+    }
+    showControls();
+  }
+
+  function projGoPrev() {
+    if (projPlaying) { clearInterval(projInterval); projInterval = null; }
+    projIndex = (projIndex - 1 + photos.length) % photos.length;
+    updateProjUI(true);
+    if (projPlaying) {
+      startProgress();
+      projInterval = setInterval(() => {
+        projIndex = (projIndex + 1) % photos.length;
+        updateProjUI(true); startProgress();
+      }, projSpeed);
+    }
+    showControls();
+  }
+
+  function openProjector() {
+    projIndex = current;
+    overlay.classList.add('visible');
+    curtainLeft.classList.remove('opening','closing');
+    curtainRight.classList.remove('opening','closing');
+    curtainLeft.style.transform  = '';
+    curtainRight.style.transform = '';
+    projCaption.classList.remove('show');
+    hideQuote();
+    projImg.classList.remove('kb1','kb2','kb3');
+    loadProjImage(projIndex, () => {});
+    projCounter.textContent = pad(projIndex+1)+' / '+pad(photos.length);
+
+    // Film leader countdown
+    filmLeader.classList.remove('playing');
+    void filmLeader.offsetWidth;
+    let count = 3;
+    leaderNum.textContent = count;
+    filmLeader.classList.add('playing');
+    const countInterval = setInterval(() => {
+      count--;
+      if (count > 0) leaderNum.textContent = count;
+      else clearInterval(countInterval);
+    }, 600);
+
+    startCrackle();
+
+    // Open curtains after leader
+    setTimeout(() => {
+      filmLeader.classList.remove('playing');
+      curtainLeft.classList.add('opening');
+      curtainRight.classList.add('opening');
+      setTimeout(() => {
+        projImg.classList.add('flickering');
+        projCaption.classList.add('show');
+        const p = photos[projIndex];
+        projCapText.textContent = p.caption;
+        projCapDate.textContent = p.date;
+        applyKenBurns(projSpeed + 600);
+        showControls();
+        projPlay();
+        setTimeout(showQuote, 800);
+      }, 1400);
+    }, 2600);
+  }
+
+  function closeProjector() {
+    projPause();
+    stopCrackle();
+    hideQuote();
+    curtainLeft.classList.remove('opening');
+    curtainRight.classList.remove('opening');
+    curtainLeft.classList.add('closing');
+    curtainRight.classList.add('closing');
+    setTimeout(() => {
+      overlay.classList.remove('visible');
+      curtainLeft.classList.remove('closing');
+      curtainRight.classList.remove('closing');
+      projCaption.classList.remove('show');
+      projImg.classList.remove('flickering','kb1','kb2','kb3');
+      projImg.src = '';
+    }, 950);
+  }
+
+  document.getElementById('pc-prev').addEventListener('click',  () => projGoPrev());
+  document.getElementById('pc-next').addEventListener('click',  () => projGoNext());
+  document.getElementById('pc-play').addEventListener('click',  () => projTogglePlay());
+  document.getElementById('playBtn').addEventListener('click',  () => openProjector());
+  document.getElementById('proj-close').addEventListener('click', () => closeProjector());
+  document.getElementById('proj-tap-prev').addEventListener('click', () => projGoPrev());
+  document.getElementById('proj-tap-next').addEventListener('click', () => projGoNext());
+  document.getElementById('proj-screen').addEventListener('click', () => showControls());
+
+  document.querySelectorAll('.pctrl-speed-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      projSpeed = parseInt(btn.dataset.spd);
+      document.querySelectorAll('.pctrl-speed-btn').forEach(b => b.classList.remove('on'));
+      btn.classList.add('on');
+      if (projPlaying) {
+        clearInterval(projInterval);
+        startProgress();
+        projInterval = setInterval(() => {
+          projIndex = (projIndex + 1) % photos.length;
+          updateProjUI(true); startProgress();
+        }, projSpeed);
+      }
+      showControls();
+    });
+  });
+
+  document.addEventListener('keydown', e => {
+    if (!overlay.classList.contains('visible')) return;
+    if (e.key === 'ArrowRight')            projGoNext();
+    if (e.key === 'ArrowLeft')             projGoPrev();
+    if (e.key === ' ' || e.key === 'k') { e.preventDefault(); projTogglePlay(); }
+    if (e.key === 'Escape')                closeProjector();
+  });
+
+  let pTx = 0;
+  overlay.addEventListener('touchstart', e => { pTx = e.touches[0].clientX; }, {passive:true});
+  overlay.addEventListener('touchend',   e => {
+    const dx = e.changedTouches[0].clientX - pTx;
+    if (Math.abs(dx) > 50) { dx < 0 ? projGoNext() : projGoPrev(); }
+  }, {passive:true});
+
+  /* ══════════════════════════════════════════
+     VINYL CRACKLE AUDIO
+  ══════════════════════════════════════════ */
+  let audioCtx    = null;
+  let crackleSrc  = null;
+  let crackleGain = null;
+
+  function startCrackle() {
+    try {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      if (crackleSrc) { try { crackleSrc.stop(); } catch(e){} }
+
+      const bufLen = audioCtx.sampleRate * 2;
+      const buf    = audioCtx.createBuffer(1, bufLen, audioCtx.sampleRate);
+      const data   = buf.getChannelData(0);
+      for (let i = 0; i < bufLen; i++) {
+        data[i] = Math.random() < 0.003 ? (Math.random()*2-1)*0.6 : 0;
+      }
+      crackleSrc  = audioCtx.createBufferSource();
+      crackleGain = audioCtx.createGain();
+      const lp    = audioCtx.createBiquadFilter();
+      lp.type = 'lowpass'; lp.frequency.value = 3000;
+      crackleSrc.buffer = buf; crackleSrc.loop = true;
+      crackleGain.gain.value = 0.06;
+      crackleSrc.connect(lp); lp.connect(crackleGain); crackleGain.connect(audioCtx.destination);
+      crackleSrc.start();
+    } catch(e) {}
+  }
+
+  function stopCrackle() {
+    try { if (crackleGain) crackleGain.gain.setTargetAtTime(0, audioCtx.currentTime, 0.4); } catch(e){}
+  }
+
+  /* ══════════════════════════════════════════
+     BOKEH FLOATING LIGHTS
+  ══════════════════════════════════════════ */
+  (function(){
+    const c = document.getElementById('bokeh');
+    for (let i = 0; i < 18; i++) {
+      const d  = document.createElement('div');
+      d.className = 'bokeh-dot';
+      const sz = 6 + Math.random()*28;
+      const op = 0.04 + Math.random()*0.09;
+      d.style.cssText = [
+        `width:${sz}px`, `height:${sz}px`,
+        `left:${Math.random()*100}%`,
+        `top:${20+Math.random()*70}%`,
+        `background:rgba(200,147,58,${op.toFixed(2)})`,
+        `filter:blur(${sz*0.5}px)`,
+        `--bk-op:${op}`,
+        `animation-duration:${8+Math.random()*12}s`,
+        `animation-delay:${-Math.random()*15}s`,
+      ].join(';');
+      c.appendChild(d);
+    }
+  })();
+
+  /* ══════════════════════════════════════════
+     FILM SCRATCH LINES
+  ══════════════════════════════════════════ */
+  (function(){
+    const c = document.getElementById('film-scratches');
+    for (let i = 0; i < 5; i++) {
+      const s = document.createElement('div');
+      s.className = 'scratch';
+      s.style.cssText = [
+        `left:${10+Math.random()*80}%`,
+        `animation-duration:${3+Math.random()*4}s`,
+        `animation-delay:${-Math.random()*8}s`,
+      ].join(';');
+      c.appendChild(s);
+    }
+  })();
+
+  /* ══════════════════════════════════════════
+     PROJECTOR DUST MOTES
+  ══════════════════════════════════════════ */
+  (function(){
+    const c = document.getElementById('proj-dust');
+    for (let i = 0; i < 30; i++) {
+      const m  = document.createElement('div');
+      m.className = 'proj-mote';
+      const sz = 1 + Math.random()*2;
+      const op = 0.2 + Math.random()*0.5;
+      m.style.cssText = [
+        `width:${sz}px`, `height:${sz}px`,
+        `left:${Math.random()*100}%`,
+        `top:${Math.random()*100}%`,
+        `--m-op:${op}`,
+        `--m-dx:${-20+Math.random()*40}px`,
+        `--m-dy:${-40-Math.random()*60}px`,
+        `animation-duration:${5+Math.random()*9}s`,
+        `animation-delay:${-Math.random()*12}s`,
+      ].join(';');
+      c.appendChild(m);
+    }
+  })();
+
+  /* ══════════════════════════════════════════
+     FILM GRAIN CANVAS
+  ══════════════════════════════════════════ */
   (function(){
     const c = document.getElementById('grain');
-    c.style.cssText = 'position:fixed;inset:0;z-index:2;pointer-events:none;opacity:0.07;';
     const ctx = c.getContext('2d');
     function resize(){ c.width=innerWidth; c.height=innerHeight; }
     resize(); window.addEventListener('resize', resize);
     function draw(){
       const id = ctx.createImageData(c.width, c.height);
       const d  = id.data;
-      for(let i=0;i<d.length;i+=4){
-        const v=Math.random()*255|0;
+      for (let i = 0; i < d.length; i+=4) {
+        const v = Math.random()*255|0;
         d[i]=d[i+1]=d[i+2]=v; d[i+3]=255;
       }
       ctx.putImageData(id,0,0);
@@ -591,10 +1568,12 @@
     draw();
   })();
 
-  /* Dust particles */
+  /* ══════════════════════════════════════════
+     DUST PARTICLES (background)
+  ══════════════════════════════════════════ */
   (function(){
     const c = document.getElementById('dust');
-    for(let i=0;i<22;i++){
+    for (let i = 0; i < 22; i++) {
       const p = document.createElement('div');
       p.className = 'particle';
       p.style.cssText = [
@@ -608,6 +1587,13 @@
       c.appendChild(p);
     }
   })();
+
+  /* ══════════════════════════════════════════
+     OPENING TITLE CARD auto-dismiss
+  ══════════════════════════════════════════ */
+  const titleCard = document.getElementById('title-card');
+  setTimeout(() => { if(titleCard) titleCard.classList.add('gone'); }, 4400);
+
 </script>
 </body>
 </html>
